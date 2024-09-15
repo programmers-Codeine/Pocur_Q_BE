@@ -19,7 +19,7 @@ jobs:
         
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD      
     - name: Build the Docker image
-      run: docker build -t manaweb-api .
+      run: docker build -t pocurq .
     - name: taging
       run: docker tag pocurq:latest hellen0123/pocurq:latest
     - name: Push to Dockerhub
