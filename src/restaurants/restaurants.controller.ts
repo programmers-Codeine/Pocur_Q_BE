@@ -3,10 +3,10 @@ import { RestaurantsService } from './restaurants.service';
 
 @Controller('restaurants')
 export class RestaurantsController {
-  constructor(private readonly appService: RestaurantsService) {}
+  constructor(private readonly restaurantsService: RestaurantsService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getRestaurants();
+  getRestaurants(): string {
+    return this.restaurantsService.getRestaurants();
   }
 }
