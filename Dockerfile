@@ -1,13 +1,13 @@
 FROM node:18-alpine
+ENV PORT=8080
 
 WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm install
-
 COPY . .
 
-RUN npm run build
+COPY package*.json .
+RUN npm install
 
-CMD [ "node", "dist/main.js" ]
+EXPOSE $PORT
+
+CMD npm run start;
+#CMD [ "node", "./dist/main.js" ]
