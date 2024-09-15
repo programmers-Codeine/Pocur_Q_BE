@@ -5,6 +5,9 @@ import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { RestaurantsController } from './restaurants/restaurants.controller';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
