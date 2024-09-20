@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JoinDto } from './dtos/create-user.dto';
 import { LoginDto } from './dtos/login-user.dto';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -18,8 +19,15 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Body() loginData: LoginDto): Promise<{ accessToken: string }> {
+  async login(@Res() response: Response, @Body() loginData: LoginDto): Promise<any> {
     const jwt = await this.userService.login(loginData);
-    return { accessToken: jwt.accessToken };
+
+    response.cookie('accessToken', jwt.accessToken, {
+      maxAge: 3600000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    response.status(200).send({ message: '로그인 성공' });
   }
 }
