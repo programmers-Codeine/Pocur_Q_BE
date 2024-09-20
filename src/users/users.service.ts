@@ -1,16 +1,19 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JoinDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { Users } from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LoginDto } from './dtos/login-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async join(joinData: JoinDto): Promise<void> {
@@ -33,6 +36,25 @@ export class UsersService {
       console.error('Error during user registration:', error); // 에러 로깅
       throw new InternalServerErrorException('An error occurred while processing your request');
     }
+  }
+
+  async login(loginData: LoginDto): Promise<{ accessToken: string }> {
+    const { email, password } = loginData;
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const payload = { email: user.email, sub: user.id, nickname: user.nickname };
+    const accessToken = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
 
   getHello(): string {

@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JoinDto } from './dtos/create-user.dto';
+import { LoginDto } from './dtos/login-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -16,5 +17,9 @@ export class UsersController {
     return this.userService.join(joinData);
   }
 
-  //TODO: POST login
+  @Post('login')
+  async login(@Body() loginData: LoginDto): Promise<{ accessToken: string }> {
+    const jwt = await this.userService.login(loginData);
+    return { accessToken: jwt.accessToken };
+  }
 }
