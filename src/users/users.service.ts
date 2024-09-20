@@ -1,7 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { JoinDto } from './dtos/create-user.dto';
+import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import { Users } from './entities/users.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>,
+  ) {}
+
+  async join(joinData: JoinDto): Promise<void> {
+    try {
+      const { email, password, nickname } = joinData;
+
+      const existingUser = await this.userRepository.findOne({ where: { email: email } });
+      if (existingUser) {
+        throw new ConflictException('This email is already in use');
+      }
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const id = uuidv4();
+
+      const newUser = this.userRepository.create({ email, password: hashedPassword, nickname, id });
+      await this.userRepository.save(newUser);
+    } catch (error) {
+      console.error('Error during user registration:', error); // 에러 로깅
+      throw new InternalServerErrorException('An error occurred while processing your request');
+    }
+  }
+
   getHello(): string {
     return 'Hello World11!';
   }
