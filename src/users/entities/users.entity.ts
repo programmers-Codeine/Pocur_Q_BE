@@ -11,9 +11,6 @@ export class Users {
   @Column()
   password: string;
 
-  @Column()
-  salt: string;
-
   @Column({ nullable: true })
   nickname?: string;
 }
