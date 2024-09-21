@@ -17,6 +17,7 @@ export class RestaurantsService {
     if (!restaurant) {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
     }
+
     return restaurant;
   }
 
@@ -25,6 +26,7 @@ export class RestaurantsService {
       ...createRestaurantDto,
       user_id: userId,
     });
+
     return await this.restaurantRepository.save(newRestaurant);
   }
 
@@ -35,7 +37,7 @@ export class RestaurantsService {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
     }
 
-    Object.assign(restaurant, updateRestaurantDto);
-    return await this.restaurantRepository.save(restaurant);
+    const newRestaurant = { ...restaurant, ...updateRestaurantDto };
+    return await this.restaurantRepository.save(newRestaurant);
   }
 }
