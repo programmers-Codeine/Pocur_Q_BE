@@ -23,7 +23,7 @@ export class UsersController {
     const jwt = await this.userService.login(loginDto);
 
     response.cookie('accessToken', jwt.accessToken, {
-      maxAge: 3600000,
+      maxAge: 1000 * 60 * 60, // 1시간
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     });
