@@ -5,6 +5,7 @@ import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { RestaurantsController } from './restaurants/restaurants.controller';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { HealthCheckController } from './health-check/health-check.controller';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -24,11 +25,12 @@ dotenv.config();
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity.{ts,js}'],
       synchronize: false,
+      logging: true,
     }),
     UsersModule,
     RestaurantsModule,
   ],
-  controllers: [UsersController, RestaurantsController],
+  controllers: [UsersController, RestaurantsController, HealthCheckController],
   providers: [],
 })
 export class AppModule {}
