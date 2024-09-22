@@ -15,8 +15,8 @@ export class Users {
   nickname?: string;
 
   @CreateDateColumn()
-  created_time: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updated_time: Date;
+  updated_at: Date;
 }
