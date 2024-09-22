@@ -20,9 +20,9 @@ export class UsersController {
 
   @Post('login')
   async login(@Res() response: Response, @Body() loginDto: LoginUserDto): Promise<any> {
-    const jwt = await this.userService.login(loginDto);
+    const { accessToken } = await this.userService.login(loginDto);
 
-    response.cookie('accessToken', jwt.accessToken, {
+    response.cookie('accessToken', accessToken, {
       maxAge: 1000 * 60 * 60, // 1시간
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
