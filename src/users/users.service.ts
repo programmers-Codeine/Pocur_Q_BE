@@ -13,9 +13,9 @@ export class UsersService {
     private readonly userRepository: Repository<Users>,
   ) {}
 
-  async join(joinData: CreateUserDto): Promise<void> {
+  async join(joinDto: CreateUserDto): Promise<void> {
     try {
-      const { email, password, nickname } = joinData;
+      const { email, password, nickname } = joinDto;
 
       const existingUser = await this.userRepository.findOne({ where: { email: email } });
       if (existingUser) {

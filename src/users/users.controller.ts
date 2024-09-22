@@ -12,8 +12,8 @@ export class UsersController {
   }
 
   @Post('join')
-  async join(@Body() joinData: CreateUserDto): Promise<void> {
-    return this.userService.join(joinData);
+  async join(@Body() joinDto: CreateUserDto): Promise<void> {
+    return this.userService.join(joinDto);
   }
 
   //TODO: POST login
