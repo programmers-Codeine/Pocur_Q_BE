@@ -19,8 +19,8 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Res() response: Response, @Body() loginData: LoginUserDto): Promise<any> {
-    const jwt = await this.userService.login(loginData);
+  async login(@Res() response: Response, @Body() loginDto: LoginUserDto): Promise<any> {
+    const jwt = await this.userService.login(loginDto);
 
     response.cookie('accessToken', jwt.accessToken, {
       maxAge: 3600000,
