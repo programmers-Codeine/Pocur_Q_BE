@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { JoinDto } from './dtos/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -12,7 +12,7 @@ export class UsersController {
   }
 
   @Post('join')
-  async join(@Body() joinData: JoinDto): Promise<void> {
+  async join(@Body() joinData: CreateUserDto): Promise<void> {
     return this.userService.join(joinData);
   }
 

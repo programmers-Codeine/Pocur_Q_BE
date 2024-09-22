@@ -1,6 +1,6 @@
 import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
-export class JoinDto {
+export class CreateUserDto {
   @IsEmail()
   email: string;
 

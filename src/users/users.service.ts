@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { JoinDto } from './dtos/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { Users } from './entities/users.entity';
@@ -13,7 +13,7 @@ export class UsersService {
     private readonly userRepository: Repository<Users>,
   ) {}
 
-  async join(joinData: JoinDto): Promise<void> {
+  async join(joinData: CreateUserDto): Promise<void> {
     try {
       const { email, password, nickname } = joinData;
 
