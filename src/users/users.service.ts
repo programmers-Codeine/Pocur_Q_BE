@@ -1,7 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { JoinDto } from './dtos/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 import { Users } from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,9 +12,9 @@ export class UsersService {
     private readonly userRepository: Repository<Users>,
   ) {}
 
-  async join(joinData: JoinDto): Promise<void> {
+  async join(joinDto: CreateUserDto): Promise<void> {
     try {
-      const { email, password, nickname } = joinData;
+      const { email, password, nickname } = joinDto;
 
       const existingUser = await this.userRepository.findOne({ where: { email: email } });
       if (existingUser) {
@@ -25,17 +24,11 @@ export class UsersService {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const id = uuidv4();
-
-      const newUser = this.userRepository.create({ email, password: hashedPassword, nickname, id });
+      const newUser = this.userRepository.create({ email, password: hashedPassword, nickname });
       await this.userRepository.save(newUser);
     } catch (error) {
       console.error('Error during user registration:', error); // 에러 로깅
       throw new InternalServerErrorException('An error occurred while processing your request');
     }
-  }
-
-  getHello(): string {
-    return 'Hello World11!';
   }
 }
