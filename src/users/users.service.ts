@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Users } from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LoginDto } from './dtos/login-user.dto';
+import { LoginUserDto } from './dtos/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class UsersService {
     }
   }
 
-  async login(loginData: LoginDto): Promise<{ accessToken: string }> {
+  async login(loginData: LoginUserDto): Promise<{ accessToken: string }> {
     const { email, password } = loginData;
     const user = await this.userRepository.findOne({ where: { email } });
 

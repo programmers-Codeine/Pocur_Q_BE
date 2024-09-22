@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JoinDto } from './dtos/create-user.dto';
-import { LoginDto } from './dtos/login-user.dto';
+import { LoginUserDto } from './dtos/login-user.dto';
 import { Response } from 'express';
 
 @Controller('users')
@@ -19,7 +19,7 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Res() response: Response, @Body() loginData: LoginDto): Promise<any> {
+  async login(@Res() response: Response, @Body() loginData: LoginUserDto): Promise<any> {
     const jwt = await this.userService.login(loginData);
 
     response.cookie('accessToken', jwt.accessToken, {
