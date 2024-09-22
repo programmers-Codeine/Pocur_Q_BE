@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { LoginUserDto } from './dtos/login-user.dto';
+import { Response } from 'express';
 import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('users')
@@ -11,5 +13,16 @@ export class UsersController {
     return this.userService.join(joinDto);
   }
 
-  //TODO: POST login
+  @Post('login')
+  async login(@Res() response: Response, @Body() loginDto: LoginUserDto): Promise<void> {
+    const { accessToken } = await this.userService.login(loginDto);
+
+    response.cookie('accessToken', accessToken, {
+      maxAge: 1000 * 60 * 60, // 1시간
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    response.status(200).send({ message: '로그인 성공' });
+  }
 }
