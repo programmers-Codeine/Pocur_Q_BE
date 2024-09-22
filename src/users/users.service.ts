@@ -1,7 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 import { Users } from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,9 +24,7 @@ export class UsersService {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const id = uuidv4();
-
-      const newUser = this.userRepository.create({ email, password: hashedPassword, nickname, id });
+      const newUser = this.userRepository.create({ email, password: hashedPassword, nickname });
       await this.userRepository.save(newUser);
     } catch (error) {
       console.error('Error during user registration:', error); // 에러 로깅
