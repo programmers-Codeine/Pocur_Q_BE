@@ -6,11 +6,6 @@ import { CreateUserDto } from './dtos/create-user.dto';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Get()
-  getHello(): string {
-    return this.userService.getHello();
-  }
-
   @Post('join')
   async join(@Body() joinDto: CreateUserDto): Promise<void> {
     return this.userService.join(joinDto);

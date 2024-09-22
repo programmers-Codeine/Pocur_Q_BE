@@ -34,8 +34,4 @@ export class UsersService {
       throw new InternalServerErrorException('An error occurred while processing your request');
     }
   }
-
-  getHello(): string {
-    return 'Hello World11!';
-  }
 }
