@@ -19,7 +19,7 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Res() response: Response, @Body() loginDto: LoginUserDto): Promise<any> {
+  async login(@Res() response: Response, @Body() loginDto: LoginUserDto): Promise<void> {
     const { accessToken } = await this.userService.login(loginDto);
 
     response.cookie('accessToken', accessToken, {
