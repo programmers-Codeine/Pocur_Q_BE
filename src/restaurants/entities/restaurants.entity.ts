@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { IsString, IsInt, MaxLength } from 'class-validator';
 
 @Entity('restaurants')
@@ -38,4 +38,14 @@ export class Restaurant {
   @IsString()
   @MaxLength(45)
   comment: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+  created_at: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+    name: 'updated_at',
+  })
+  updated_at: Date;
 }
