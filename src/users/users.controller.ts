@@ -14,7 +14,10 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Req() request: Request, @Body() loginDto: LoginUserDto): Promise<{ message: string }> {
+  async login(
+    @Req() request: Request,
+    @Body() loginDto: LoginUserDto,
+  ): Promise<{ message: string; accessToken: string }> {
     const { accessToken } = await this.userService.login(loginDto);
 
     request.res.cookie('accessToken', accessToken, {
@@ -23,6 +26,9 @@ export class UsersController {
       secure: process.env.NODE_ENV === 'production',
     });
 
-    return { message: '로그인 성공' };
+    return {
+      message: '로그인 성공',
+      accessToken: `Bearer ${accessToken}`,
+    };
   }
 }
