@@ -7,7 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    UsersModule, // UsersModule 추가
+    UsersModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
