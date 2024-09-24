@@ -14,10 +14,7 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(
-    @Req() request: Request,
-    @Body() loginDto: LoginUserDto,
-  ): Promise<{ message: string; accessToken: string }> {
+  async login(@Req() request: Request, @Body() loginDto: LoginUserDto): Promise<{ message: string }> {
     const { accessToken } = await this.userService.login(loginDto);
 
     request.res.cookie('accessToken', accessToken, {
@@ -28,7 +25,6 @@ export class UsersController {
 
     return {
       message: '로그인 성공',
-      accessToken: `Bearer ${accessToken}`,
     };
   }
 }
