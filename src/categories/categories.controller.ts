@@ -8,6 +8,6 @@ export class CategoriesController {
 
   @Get(':restaurant_id')
   async getCategory(@Param('restaurant_id') restaurantId: string): Promise<Categories> {
-    return await this.categoriesService.getCategoryById(restaurantId);
+    return await this.categoriesService.getCategory(restaurantId);
   }
 }

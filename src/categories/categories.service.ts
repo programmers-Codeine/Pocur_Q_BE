@@ -10,7 +10,7 @@ export class CategoriesService {
     private readonly categoryRepository: Repository<Categories>,
   ) {}
 
-  async getCategoryById(restaurantId: string): Promise<Categories> {
+  async getCategory(restaurantId: string): Promise<Categories> {
     const categories = await this.categoryRepository.findOne({ where: { restaurant_id: restaurantId } });
     if (!categories) {
       throw new NotFoundException('레스토랑의 카테고리를 찾지 못했습니다.');
