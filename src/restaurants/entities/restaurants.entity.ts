@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { IsString, IsInt, MaxLength } from 'class-validator';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
+import { Url } from 'src/urls/entities/urls.entity';
 
 @Entity('restaurants')
 export class Restaurant {
@@ -52,4 +53,7 @@ export class Restaurant {
 
   @OneToMany(() => RestaurantTable, (table) => table.restaurant)
   tables: RestaurantTable[];
+
+  @OneToMany(() => Url, (url) => url.restaurant)
+  urls: Url[];
 }
