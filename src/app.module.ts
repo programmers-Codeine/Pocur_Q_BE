@@ -7,6 +7,7 @@ import { RestaurantsController } from './restaurants/restaurants.controller';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { HealthCheckController } from './health-check/health-check.controller';
 import { RestaurantTablesModule } from './restaurantTables/restaurantTables.module';
+import { UrlsModule } from './urls/urls.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -31,6 +32,7 @@ dotenv.config();
     UsersModule,
     RestaurantsModule,
     RestaurantTablesModule,
+    UrlsModule,
   ],
   controllers: [UsersController, RestaurantsController, HealthCheckController],
   providers: [],
