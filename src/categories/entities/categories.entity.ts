@@ -11,6 +11,8 @@ export class Categories {
   @MaxLength(45)
   restaurant_id: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 45 })
+  @IsString()
+  @MaxLength(45)
   category_name: string;
 }
