@@ -23,6 +23,8 @@ export class UsersController {
       secure: process.env.NODE_ENV === 'production',
     });
 
-    return { message: '로그인 성공' };
+    return {
+      message: '로그인 성공',
+    };
   }
 }
