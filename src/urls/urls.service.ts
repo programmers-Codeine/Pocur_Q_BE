@@ -11,6 +11,15 @@ export class UrlsService {
     private readonly urlRepository: Repository<Url>,
   ) {}
 
+  async findUrlsByRestaurantId(restaurantId: string): Promise<Url[]> {
+    return await this.urlRepository.find({
+      where: { restaurant: { id: restaurantId } },
+      order: {
+        url: 'ASC',
+      },
+    });
+  }
+
   async createUrl(restaurant: Restaurant, tableNum: number): Promise<Url> {
     const newUrl = this.urlRepository.create({
       restaurant,
