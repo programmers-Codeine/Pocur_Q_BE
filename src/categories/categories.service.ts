@@ -39,4 +39,16 @@ export class CategoriesService {
     const newCategory = { ...category, ...createCategoryDto };
     return await this.categoryRepository.save(newCategory);
   }
+
+  async deleteCategory(restaurantId: string, categoryId: string): Promise<void> {
+    const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
+
+    if (!category) {
+      throw new NotFoundException(
+        `레스토랑 ID ${restaurantId}에 해당하는 카테고리 ID ${categoryId}를 찾을 수 없습니다.`,
+      );
+    }
+
+    await this.categoryRepository.remove(category); // 카테고리 삭제
+  }
 }
