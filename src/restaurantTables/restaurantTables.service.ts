@@ -14,11 +14,15 @@ export class RestaurantTablesService {
     private readonly restaurantRepository: Repository<Restaurant>,
   ) {}
 
-  async findAll(): Promise<RestaurantTable[]> {
+  async findTablesByRestaurantId(restaurantId: string): Promise<RestaurantTable[]> {
+    const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
+    if (!restaurant) {
+      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+    }
+
     return await this.restaurantTableRepository.find({
-      order: {
-        table_num: 'ASC', // table_num을 기준으로 오름차순 정렬
-      },
+      where: { restaurant: { id: restaurantId } },
+      order: { table_num: 'ASC' }, // table_num을 오름차순으로 정렬
     });
   }
 
