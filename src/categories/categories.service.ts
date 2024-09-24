@@ -25,4 +25,18 @@ export class CategoriesService {
 
     return await this.categoryRepository.save(newCategory);
   }
+
+  async updateCategory(
+    restaurantId: string,
+    categoryId: string,
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<Categories> {
+    const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
+
+    if (!category) {
+      throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
+    }
+    const newCategory = { ...category, ...createCategoryDto };
+    return await this.categoryRepository.save(newCategory);
+  }
 }
