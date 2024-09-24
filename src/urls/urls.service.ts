@@ -27,4 +27,17 @@ export class UrlsService {
     });
     return await this.urlRepository.save(newUrl);
   }
+
+  async deleteUrlByTableNumAndRestaurantId(restaurantId: string, tableNum: number): Promise<void> {
+    const urlToDelete = await this.urlRepository.findOne({
+      where: {
+        restaurant: { id: restaurantId },
+        url: `https://pocurq.shop/customer?restaurant_id=${restaurantId}&table_num=${tableNum}`,
+      },
+    });
+
+    if (urlToDelete) {
+      await this.urlRepository.remove(urlToDelete);
+    }
+  }
 }

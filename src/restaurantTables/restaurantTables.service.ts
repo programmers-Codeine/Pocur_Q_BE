@@ -82,7 +82,10 @@ export class RestaurantTablesService {
       );
     }
 
-    // 5. 가장 큰 테이블 삭제
+    // 5. URL 삭제 (해당 table_num과 restaurant_id에 맞는 URL 삭제)
+    await this.urlsService.deleteUrlByTableNumAndRestaurantId(restaurantId, lastTable.table_num);
+
+    // 6. 테이블 삭제
     await this.restaurantTableRepository.remove(lastTable);
   }
 }
