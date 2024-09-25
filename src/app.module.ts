@@ -7,6 +7,7 @@ import { RestaurantsController } from './restaurants/restaurants.controller';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { HealthCheckController } from './health-check/health-check.controller';
 import { RestaurantTablesModule } from './restaurantTables/restaurantTables.module';
+import { UrlsModule } from './urls/urls.module';
 import { CategoriesController } from './categories/categories.controller';
 import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
@@ -36,6 +37,7 @@ dotenv.config();
     UsersModule,
     RestaurantsModule,
     RestaurantTablesModule,
+    UrlsModule,
     CategoriesModule,
     AuthModule,
     MenusModule,

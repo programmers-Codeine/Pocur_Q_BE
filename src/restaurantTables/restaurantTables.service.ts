@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RestaurantTable } from './entities/restaurantTables.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+import { UrlsService } from 'src/urls/urls.service';
 
 @Injectable()
 export class RestaurantTablesService {
@@ -12,6 +13,8 @@ export class RestaurantTablesService {
 
     @InjectRepository(Restaurant)
     private readonly restaurantRepository: Repository<Restaurant>,
+
+    private readonly urlsService: UrlsService,
   ) {}
 
   async findTablesByRestaurantId(restaurantId: string): Promise<RestaurantTable[]> {
@@ -49,7 +52,12 @@ export class RestaurantTablesService {
     });
 
     // 4. 새로운 테이블 저장
-    return await this.restaurantTableRepository.save(newTable);
+    const savedTable = await this.restaurantTableRepository.save(newTable);
+
+    // 5. 해당 테이블에 맞는 URL 생성 및 저장
+    await this.urlsService.createUrl(restaurant, newTableNum); // URL 생성
+
+    return savedTable;
   }
 
   async removeTableWithMaxTableNum(restaurantId: string): Promise<void> {
@@ -78,7 +86,10 @@ export class RestaurantTablesService {
       );
     }
 
-    // 5. 가장 큰 테이블 삭제
+    // 5. URL 삭제 (해당 table_num과 restaurant_id에 맞는 URL 삭제)
+    await this.urlsService.deleteUrlByTableNumAndRestaurantId(restaurantId, lastTable.table_num);
+
+    // 6. 테이블 삭제
     await this.restaurantTableRepository.remove(lastTable);
   }
 }
