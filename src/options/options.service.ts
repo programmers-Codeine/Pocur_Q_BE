@@ -12,7 +12,11 @@ export class OptionsService {
   ) {}
 
   async createOption(restaurantId: string, menuId: string, createOptionDto: CreateOptionDto): Promise<Option> {
-    const newOption = await this.optionRepository.create({ ...createOptionDto, menu_id: menuId });
+    const newOption = new Option();
+
+    newOption.menu_id = menuId;
+    newOption.option_name = createOptionDto.optionName;
+    newOption.option_price = createOptionDto.optionPrice;
 
     return await this.optionRepository.save(newOption);
   }
