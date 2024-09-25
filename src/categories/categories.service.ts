@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from './dtos/create-categories.dto';
 
+//Todo: 추후 user와 restaurant 매칭 맞는지 확인하는 로직 추가 필요
 @Injectable()
 export class CategoriesService {
   constructor(
@@ -49,6 +50,6 @@ export class CategoriesService {
       );
     }
 
-    await this.categoryRepository.remove(category); // 카테고리 삭제
+    await this.categoryRepository.remove(category);
   }
 }
