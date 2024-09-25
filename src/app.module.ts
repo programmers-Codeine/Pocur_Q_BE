@@ -7,6 +7,8 @@ import { RestaurantsController } from './restaurants/restaurants.controller';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { HealthCheckController } from './health-check/health-check.controller';
 import { AuthModule } from './auth/auth.module';
+import { MenusController } from './menus/menus.controller';
+import { MenusModule } from './menus/menus.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -31,8 +33,9 @@ dotenv.config();
     UsersModule,
     RestaurantsModule,
     AuthModule,
+    MenusModule,
   ],
-  controllers: [UsersController, RestaurantsController, HealthCheckController],
+  controllers: [UsersController, RestaurantsController, HealthCheckController, MenusController],
   providers: [],
 })
 export class AppModule {}
