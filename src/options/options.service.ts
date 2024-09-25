@@ -38,4 +38,13 @@ export class OptionsService {
 
     return await this.optionRepository.save(option);
   }
+
+  async deleteOption(restaurantId: string, menuId: string, optionId: string): Promise<void> {
+    const option = await this.optionRepository.findOne({ where: { id: optionId, menu_id: menuId } });
+    if (!option) {
+      throw new NotFoundException(`메뉴 ID ${menuId}에 해당하는 옵션 ID ${optionId}를 찾을 수 없습니다.`);
+    }
+
+    await this.optionRepository.remove(option);
+  }
 }
