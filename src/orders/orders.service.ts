@@ -8,6 +8,7 @@ import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { OrderSummaryDto } from './dto/order-summary.dto';
 import { OrderTableSummaryDto } from './dto/order-table-summary.dto';
+import { OrdersGateway } from './orders.gateway';
 
 @Injectable()
 export class OrdersService {
@@ -23,6 +24,8 @@ export class OrdersService {
 
     @InjectRepository(RestaurantTable)
     private restaurantTableRepository: Repository<RestaurantTable>,
+
+    private ordersGateway: OrdersGateway,
   ) {}
 
   async findAllOrdersByRestaurantAndTable(restaurant_id: string, table_num: number): Promise<OrderTableSummaryDto[]> {
@@ -103,6 +106,18 @@ export class OrdersService {
       restaurantTable,
     });
 
-    return this.ordersRepository.save(order);
+    // 주문을 DB에 저장
+    const savedOrder = await this.ordersRepository.save(order);
+
+    // 주문 업데이트 정보를 클라이언트로 전송 (실시간)
+    this.ordersGateway.sendOrderUpdate({
+      id: savedOrder.id,
+      table_num: restaurantTable.table_num,
+      menu_name: menu.menu_name,
+      count,
+      total_price,
+    });
+
+    return savedOrder;
   }
 }
