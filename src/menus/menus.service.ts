@@ -63,4 +63,13 @@ export class MenusService {
     const newMenu = { ...menu, ...updateMenuDto };
     return await this.menuRepository.save(newMenu);
   }
+
+  async deleteMenu(restaurantId: string, menuId: string): Promise<void> {
+    const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant_id: restaurantId } });
+    if (!menu) {
+      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 해당하는 카테고리 ID ${menuId}를 찾을 수 없습니다.`);
+    }
+
+    await this.menuRepository.remove(menu);
+  }
 }
