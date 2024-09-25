@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Order } from './entities/orders.entity';
@@ -7,8 +7,12 @@ import { Order } from './entities/orders.entity';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Post()
-  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-    return this.ordersService.createOrder(createOrderDto);
+  @Post(':restaurant_id/:restaurantTable_id')
+  async createOrder(
+    @Param('restaurant_id') restaurant_id: string,
+    @Param('restaurantTable_id') restaurantTable_id: string,
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<Order> {
+    return this.ordersService.createOrder(createOrderDto, restaurant_id, restaurantTable_id);
   }
 }
