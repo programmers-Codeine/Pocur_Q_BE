@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Option } from './entities/options.entity';
@@ -19,5 +19,23 @@ export class OptionsService {
     newOption.option_price = createOptionDto.optionPrice;
 
     return await this.optionRepository.save(newOption);
+  }
+
+  async updateOption(
+    restaurantId: string,
+    menuId: string,
+    optionId: string,
+    createOptionDto: CreateOptionDto,
+  ): Promise<Option> {
+    const option = await this.optionRepository.findOne({ where: { id: optionId, menu_id: menuId } });
+
+    if (!option) {
+      throw new NotFoundException(`이 ${optionId}에 해당하는 옵션가 없습니다.`);
+    }
+
+    option.option_name = createOptionDto.optionName;
+    option.option_price = createOptionDto.optionPrice;
+
+    return await this.optionRepository.save(option);
   }
 }
