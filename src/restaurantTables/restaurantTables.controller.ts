@@ -6,9 +6,9 @@ import { RestaurantTable } from './entities/restaurantTables.entity';
 export class RestaurantTablesController {
   constructor(private readonly restaurantTablesService: RestaurantTablesService) {}
 
-  @Get()
-  async getAllTables(): Promise<RestaurantTable[]> {
-    return this.restaurantTablesService.findAll();
+  @Get(':restaurant_id')
+  async getTablesByRestaurant(@Param('restaurant_id') restaurantId: string): Promise<RestaurantTable[]> {
+    return this.restaurantTablesService.findTablesByRestaurantId(restaurantId);
   }
 
   @Post('add/:restaurant_id')

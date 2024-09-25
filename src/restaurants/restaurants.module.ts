@@ -11,6 +11,6 @@ import { UrlsService } from 'src/urls/urls.service';
   imports: [TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url])],
   controllers: [RestaurantsController],
   providers: [RestaurantsService, UrlsService],
-  exports: [RestaurantsService],
+  exports: [RestaurantsService, RestaurantsModule],
 })
 export class RestaurantsModule {}
