@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Menus } from './entities/menus.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateMenuDto } from './dtos/create-menus.dto';
 
 @Injectable()
 export class MenusService {
@@ -12,7 +13,7 @@ export class MenusService {
 
   //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
   async getAllMenus(restaurantId: string): Promise<Menus[]> {
-    const menus = await this.menuRepository.find({ where: { restaurant_id: restaurantId } });
+    const menus = await this.menuRepository.find({ where: { restaurant_id: restaurantId }, relations: ['options'] });
     if (menus.length === 0) {
       throw new NotFoundException('레스토랑의 메뉴가 없습니다.');
     }
@@ -26,7 +27,7 @@ export class MenusService {
         restaurant_id: restaurantId,
         id: menuId,
       },
-      relations: ['options'], // Fetch related options
+      relations: ['options'],
     });
 
     if (!menu) {
@@ -34,5 +35,21 @@ export class MenusService {
     }
 
     return menu;
+  }
+
+  async createMenu(restaurantId: string, createMenuDto: CreateMenuDto): Promise<Menus> {
+    const newMenu = new Menus();
+
+    newMenu.restaurant_id = restaurantId;
+    newMenu.category_id = createMenuDto.categoryId;
+    newMenu.menu_name = createMenuDto.menuName;
+    newMenu.price = createMenuDto.price;
+    newMenu.menu_detail = createMenuDto.menuDetail;
+    newMenu.menu_img = createMenuDto.menuImg;
+    newMenu.origin = createMenuDto.origin;
+    newMenu.is_active = createMenuDto.isActivate;
+    newMenu.sold_out = createMenuDto.soldOut;
+
+    return await this.menuRepository.save(newMenu);
   }
 }
