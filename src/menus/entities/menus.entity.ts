@@ -1,5 +1,15 @@
+import { Categories } from 'src/categories/entities/categories.entity';
 import { Option } from 'src/options/entities/options.entity';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('menus')
 export class Menus {
@@ -45,4 +55,8 @@ export class Menus {
 
   @OneToMany(() => Option, (option) => option.menu, { eager: true })
   options: Option[];
+
+  @ManyToOne(() => Categories, (category) => category.menus)
+  @JoinColumn({ name: 'category_id' })
+  category: Categories;
 }
