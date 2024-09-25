@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { UrlsService } from 'src/urls/urls.service';
 import { Url } from 'src/urls/entities/urls.entity';
+import { Order } from 'src/orders/entities/orders.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RestaurantTable, Restaurant, Url])],
+  imports: [TypeOrmModule.forFeature([RestaurantTable, Restaurant, Url, Order])],
   controllers: [RestaurantTablesController],
   providers: [RestaurantTablesService, UrlsService],
   exports: [RestaurantTablesService],
