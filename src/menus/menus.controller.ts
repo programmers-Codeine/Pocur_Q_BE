@@ -12,4 +12,10 @@ export class MenusController {
   async getAllMenus(@Param('restaurant_id') restaurantId: string): Promise<Menus[]> {
     return await this.menusService.getAllMenus(restaurantId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':restaurant_id/:menu_id')
+  async getMenu(@Param('restaurant_id') restaurantId: string, @Param('menu_id') menuId: string): Promise<Menus> {
+    return await this.menusService.getMenu(restaurantId, menuId);
+  }
 }

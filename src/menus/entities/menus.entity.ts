@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Option } from 'src/options/entities/options.entity';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('menus')
 export class Menus {
@@ -41,4 +42,7 @@ export class Menus {
     name: 'updated_at',
   })
   updated_at: Date;
+
+  @OneToMany(() => Option, (option) => option.menu, { eager: true })
+  options: Option[];
 }

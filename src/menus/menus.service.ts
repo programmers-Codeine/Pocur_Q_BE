@@ -19,4 +19,20 @@ export class MenusService {
 
     return menus;
   }
+
+  async getMenu(restaurantId: string, menuId: string): Promise<Menus> {
+    const menu = await this.menuRepository.findOne({
+      where: {
+        restaurant_id: restaurantId,
+        id: menuId,
+      },
+      relations: ['options'], // Fetch related options
+    });
+
+    if (!menu) {
+      throw new NotFoundException('메뉴를 찾을 수 없습니다.');
+    }
+
+    return menu;
+  }
 }
