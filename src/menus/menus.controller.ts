@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { MenusService } from './menus.service';
 import { Menus } from './entities/menus.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -35,5 +35,11 @@ export class MenusController {
     @Body() updateMenuDto: UpdateMenuDto,
   ): Promise<Menus> {
     return await this.menusService.updateMenu(restaurantId, menuId, updateMenuDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':restaurant_id/:menu_id')
+  async deleteCategory(@Param('restaurant_id') restaurantId: string, @Param('menu_id') menuId: string): Promise<void> {
+    return await this.menusService.deleteMenu(restaurantId, menuId);
   }
 }
