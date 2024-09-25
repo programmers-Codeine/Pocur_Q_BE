@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { Menus } from './entities/menus.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMenuDto } from './dtos/create-menus.dto';
+import { UpdateMenuDto } from './dtos/update-menus.dto';
 
 @Injectable()
 export class MenusService {
@@ -50,6 +51,16 @@ export class MenusService {
     newMenu.is_active = createMenuDto.isActivate;
     newMenu.sold_out = createMenuDto.soldOut;
 
+    return await this.menuRepository.save(newMenu);
+  }
+
+  async updateMenu(restaurantId: string, menuId: string, updateMenuDto: UpdateMenuDto): Promise<Menus> {
+    const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant_id: restaurantId } });
+
+    if (!menu) {
+      throw new NotFoundException(`${menuId}에 해당하는 메뉴가 없습니다.`);
+    }
+    const newMenu = { ...menu, ...updateMenuDto };
     return await this.menuRepository.save(newMenu);
   }
 }
