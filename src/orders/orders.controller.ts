@@ -3,10 +3,19 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Order } from './entities/orders.entity';
 import { OrderSummaryDto } from './dto/order-summary.dto';
+import { OrderTableSummaryDto } from './dto/order-table-summary.dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  @Get(':restaurant_id/table/:table_num')
+  async findAllOrdersByRestaurantAndTable(
+    @Param('restaurant_id') restaurant_id: string,
+    @Param('table_num') table_num: number,
+  ): Promise<OrderTableSummaryDto[]> {
+    return this.ordersService.findAllOrdersByRestaurantAndTable(restaurant_id, table_num);
+  }
 
   @Get(':restaurant_id')
   async findAllOrdersByRestaurant(@Param('restaurant_id') restaurant_id: string): Promise<OrderSummaryDto[]> {
