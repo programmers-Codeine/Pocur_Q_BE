@@ -41,4 +41,14 @@ export class CallsService {
 
     return await this.callRepository.save(call);
   }
+
+  async deleteCall(restaurantId: string, callId: string): Promise<void> {
+    const call = await this.callRepository.findOne({ where: { id: callId, restaurant_id: restaurantId } });
+
+    if (!call) {
+      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 해당하는 호출 ID ${callId}를 찾을 수 없습니다.`);
+    }
+
+    await this.callRepository.remove(call);
+  }
 }
