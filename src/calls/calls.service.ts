@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Call } from './entities/calls.entity';
 import { Repository } from 'typeorm';
 import { CreateCallRequestDto } from './dtos/create-calls.dto';
+import { UpdateCallRequestDto } from './dtos/update-calls.dto';
 
 @Injectable()
 export class CallsService {
@@ -27,5 +28,17 @@ export class CallsService {
     newCall.call_name = createCallRequestDto.callName;
 
     return await this.callRepository.save(newCall);
+  }
+
+  async updateCall(restaurantId: string, callId: string, updateCallRequestDto: UpdateCallRequestDto): Promise<Call> {
+    const call = await this.callRepository.findOne({ where: { id: callId, restaurant_id: restaurantId } });
+
+    if (!call) {
+      throw new NotFoundException(`이 ${callId}에 해당하는 카테고리가 없습니다.`);
+    }
+
+    call.call_name = updateCallRequestDto.callName;
+
+    return await this.callRepository.save(call);
   }
 }
