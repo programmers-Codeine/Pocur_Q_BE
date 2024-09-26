@@ -53,7 +53,7 @@ export class Menus {
   })
   updated_at: Date;
 
-  @OneToMany(() => Option, (option) => option.menu, { eager: true })
+  @OneToMany(() => Option, (option) => option.menu, { eager: true, onDelete: 'CASCADE' })
   options: Option[];
 
   @ManyToOne(() => Categories, (category) => category.menus)

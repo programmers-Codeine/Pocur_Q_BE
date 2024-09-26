@@ -13,6 +13,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
 import { MenusController } from './menus/menus.controller';
 import { MenusModule } from './menus/menus.module';
+import { OptionsController } from './options/options.controller';
+import { OptionsModule } from './options/options.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -41,8 +43,16 @@ dotenv.config();
     CategoriesModule,
     AuthModule,
     MenusModule,
+    OptionsModule,
   ],
-  controllers: [UsersController, RestaurantsController, HealthCheckController, MenusController, CategoriesController],
+  controllers: [
+    UsersController,
+    RestaurantsController,
+    HealthCheckController,
+    MenusController,
+    CategoriesController,
+    OptionsController,
+  ],
   providers: [],
 })
 export class AppModule {}
