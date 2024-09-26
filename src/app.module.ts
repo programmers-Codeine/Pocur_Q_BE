@@ -15,6 +15,7 @@ import { MenusController } from './menus/menus.controller';
 import { MenusModule } from './menus/menus.module';
 import { OptionsController } from './options/options.controller';
 import { OptionsModule } from './options/options.module';
+import { CallsModule } from './calls/calls.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -44,6 +45,7 @@ dotenv.config();
     AuthModule,
     MenusModule,
     OptionsModule,
+    CallsModule,
   ],
   controllers: [
     UsersController,
