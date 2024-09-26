@@ -60,8 +60,19 @@ export class MenusService {
     if (!menu) {
       throw new NotFoundException(`${menuId}에 해당하는 메뉴가 없습니다.`);
     }
-    const newMenu = { ...menu, ...updateMenuDto };
-    return await this.menuRepository.save(newMenu);
+
+    menu.id = menuId;
+    menu.restaurant_id = restaurantId;
+    menu.category_id = updateMenuDto.categoryId;
+    menu.menu_name = updateMenuDto.menuName;
+    menu.price = updateMenuDto.price;
+    menu.menu_detail = updateMenuDto.menuDetail;
+    menu.menu_img = updateMenuDto.menuImg;
+    menu.origin = updateMenuDto.origin;
+    menu.is_active = updateMenuDto.isActivate;
+    menu.sold_out = updateMenuDto.soldOut;
+
+    return await this.menuRepository.save(menu);
   }
 
   async deleteMenu(restaurantId: string, menuId: string): Promise<void> {
