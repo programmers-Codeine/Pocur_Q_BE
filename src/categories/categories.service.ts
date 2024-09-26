@@ -3,6 +3,7 @@ import { Categories } from './entities/categories.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryDto } from './dtos/create-categories.dto';
+import { UpdateCategoryDto } from './dtos/update-categories.dto';
 
 //Todo: 추후 user와 restaurant 매칭 맞는지 확인하는 로직 추가 필요
 @Injectable()
@@ -30,14 +31,14 @@ export class CategoriesService {
   async updateCategory(
     restaurantId: string,
     categoryId: string,
-    createCategoryDto: CreateCategoryDto,
+    updateCategoryDto: UpdateCategoryDto,
   ): Promise<Categories> {
     const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
 
     if (!category) {
       throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
     }
-    const newCategory = { ...category, ...createCategoryDto };
+    const newCategory = { ...category, ...updateCategoryDto };
     return await this.categoryRepository.save(newCategory);
   }
 

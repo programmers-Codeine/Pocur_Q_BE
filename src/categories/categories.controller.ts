@@ -3,6 +3,7 @@ import { CategoriesService } from './categories.service';
 import { Categories } from './entities/categories.entity';
 import { CreateCategoryDto } from './dtos/create-categories.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UpdateCategoryDto } from './dtos/update-categories.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -28,9 +29,9 @@ export class CategoriesController {
   async updateCategory(
     @Param('restaurant_id') restaurantId: string,
     @Param('category_id') categoryId: string,
-    @Body() createCategoryDto: CreateCategoryDto,
+    @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<Categories> {
-    return await this.categoriesService.updateCategory(restaurantId, categoryId, createCategoryDto);
+    return await this.categoriesService.updateCategory(restaurantId, categoryId, updateCategoryDto);
   }
 
   @UseGuards(JwtAuthGuard)
