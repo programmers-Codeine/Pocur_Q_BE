@@ -1,6 +1,6 @@
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class CreateMenuDto {
+export class CreateMenuRequestDto {
   @IsString()
   @MaxLength(45)
   @IsOptional()

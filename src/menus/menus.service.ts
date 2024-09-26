@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Menus } from './entities/menus.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateMenuDto } from './dtos/create-menus.dto';
-import { UpdateMenuDto } from './dtos/update-menus.dto';
+import { CreateMenuRequestDto } from './dtos/create-menus.dto';
+import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
 
 @Injectable()
 export class MenusService {
@@ -38,23 +38,23 @@ export class MenusService {
     return menu;
   }
 
-  async createMenu(restaurantId: string, createMenuDto: CreateMenuDto): Promise<Menus> {
+  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menus> {
     const newMenu = new Menus();
 
     newMenu.restaurant_id = restaurantId;
-    newMenu.category_id = createMenuDto.categoryId;
-    newMenu.menu_name = createMenuDto.menuName;
-    newMenu.price = createMenuDto.price;
-    newMenu.menu_detail = createMenuDto.menuDetail;
-    newMenu.menu_img = createMenuDto.menuImg;
-    newMenu.origin = createMenuDto.origin;
-    newMenu.is_active = createMenuDto.isActivate;
-    newMenu.sold_out = createMenuDto.soldOut;
+    newMenu.category_id = createMenuRequestDto.categoryId;
+    newMenu.menu_name = createMenuRequestDto.menuName;
+    newMenu.price = createMenuRequestDto.price;
+    newMenu.menu_detail = createMenuRequestDto.menuDetail;
+    newMenu.menu_img = createMenuRequestDto.menuImg;
+    newMenu.origin = createMenuRequestDto.origin;
+    newMenu.is_active = createMenuRequestDto.isActivate;
+    newMenu.sold_out = createMenuRequestDto.soldOut;
 
     return await this.menuRepository.save(newMenu);
   }
 
-  async updateMenu(restaurantId: string, menuId: string, updateMenuDto: UpdateMenuDto): Promise<Menus> {
+  async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menus> {
     const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant_id: restaurantId } });
 
     if (!menu) {
@@ -63,14 +63,14 @@ export class MenusService {
 
     menu.id = menuId;
     menu.restaurant_id = restaurantId;
-    menu.category_id = updateMenuDto.categoryId;
-    menu.menu_name = updateMenuDto.menuName;
-    menu.price = updateMenuDto.price;
-    menu.menu_detail = updateMenuDto.menuDetail;
-    menu.menu_img = updateMenuDto.menuImg;
-    menu.origin = updateMenuDto.origin;
-    menu.is_active = updateMenuDto.isActivate;
-    menu.sold_out = updateMenuDto.soldOut;
+    menu.category_id = updateMenuRequestDto.categoryId;
+    menu.menu_name = updateMenuRequestDto.menuName;
+    menu.price = updateMenuRequestDto.price;
+    menu.menu_detail = updateMenuRequestDto.menuDetail;
+    menu.menu_img = updateMenuRequestDto.menuImg;
+    menu.origin = updateMenuRequestDto.origin;
+    menu.is_active = updateMenuRequestDto.isActivate;
+    menu.sold_out = updateMenuRequestDto.soldOut;
 
     return await this.menuRepository.save(menu);
   }

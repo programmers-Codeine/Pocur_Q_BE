@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nes
 import { MenusService } from './menus.service';
 import { Menus } from './entities/menus.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateMenuDto } from './dtos/create-menus.dto';
-import { UpdateMenuDto } from './dtos/update-menus.dto';
+import { CreateMenuRequestDto } from './dtos/create-menus.dto';
+import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
 
 @Controller('menus')
 export class MenusController {
@@ -23,8 +23,11 @@ export class MenusController {
 
   @UseGuards(JwtAuthGuard)
   @Post(':restaurant_id')
-  async createMenu(@Param('restaurant_id') restaurantId: string, @Body() createMenuDto: CreateMenuDto): Promise<Menus> {
-    return await this.menusService.createMenu(restaurantId, createMenuDto);
+  async createMenu(
+    @Param('restaurant_id') restaurantId: string,
+    @Body() createMenuRequestDto: CreateMenuRequestDto,
+  ): Promise<Menus> {
+    return await this.menusService.createMenu(restaurantId, createMenuRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -32,9 +35,9 @@ export class MenusController {
   async updateMenu(
     @Param('restaurant_id') restaurantId: string,
     @Param('menu_id') menuId: string,
-    @Body() updateMenuDto: UpdateMenuDto,
+    @Body() updateMenuRequestDto: UpdateMenuRequestDto,
   ): Promise<Menus> {
-    return await this.menusService.updateMenu(restaurantId, menuId, updateMenuDto);
+    return await this.menusService.updateMenu(restaurantId, menuId, updateMenuRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
