@@ -2,15 +2,18 @@ import { Body, Controller, Delete, Param, Post, Put, UseGuards } from '@nestjs/c
 import { OptionsService } from './options.service';
 import { Option } from './entities/options.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateOptionDto } from './dtos/create-options.dro';
+import { CreateOptionRequestDto } from './dtos/create-options.dro';
 
 @Controller('options')
 export class OptionsController {
   constructor(private readonly optionsService: OptionsService) {}
   @UseGuards(JwtAuthGuard)
   @Post(':menu_id')
-  async createOption(@Param('menu_id') menuId: string, @Body() createOptionDto: CreateOptionDto): Promise<Option> {
-    return await this.optionsService.createOption(menuId, createOptionDto);
+  async createOption(
+    @Param('menu_id') menuId: string,
+    @Body() createOptionRequestDto: CreateOptionRequestDto,
+  ): Promise<Option> {
+    return await this.optionsService.createOption(menuId, createOptionRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -18,7 +21,7 @@ export class OptionsController {
   async updateOption(
     @Param('menu_id') menuId: string,
     @Param('option_id') optionId: string,
-    @Body() createOptionDto: CreateOptionDto,
+    @Body() createOptionDto: CreateOptionRequestDto,
   ): Promise<Option> {
     return await this.optionsService.updateOption(menuId, optionId, createOptionDto);
   }
