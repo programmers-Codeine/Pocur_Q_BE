@@ -25,7 +25,7 @@ export class OptionsService {
     const option = await this.optionRepository.findOne({ where: { id: optionId, menu_id: menuId } });
 
     if (!option) {
-      throw new NotFoundException(`이 ${optionId}에 해당하는 옵션가 없습니다.`);
+      throw new NotFoundException(`${optionId}에 해당하는 옵션이 없습니다.`);
     }
 
     option.option_name = createOptionDto.optionName;
