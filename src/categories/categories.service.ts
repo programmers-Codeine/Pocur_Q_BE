@@ -23,10 +23,10 @@ export class CategoriesService {
   }
 
   async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<Categories> {
-    const newCategory = await this.categoryRepository.create({
-      ...createCategoryRequestDto,
-      restaurant_id: restaurantId,
-    });
+    const newCategory = new Categories();
+
+    newCategory.restaurant_id = restaurantId;
+    newCategory.category_name = createCategoryRequestDto.categoryName;
 
     return await this.categoryRepository.save(newCategory);
   }
@@ -41,8 +41,10 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
     }
-    const newCategory = { ...category, ...updateCategoryRequestDto };
-    return await this.categoryRepository.save(newCategory);
+
+    category.category_name = updateCategoryRequestDto.categoryName;
+
+    return await this.categoryRepository.save(category);
   }
 
   async deleteCategory(restaurantId: string, categoryId: string): Promise<void> {
