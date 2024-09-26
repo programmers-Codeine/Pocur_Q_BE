@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Categories } from './entities/categories.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateCategoryDto } from './dtos/create-categories.dto';
-import { UpdateCategoryDto } from './dtos/update-categories.dto';
+import { CreateCategoryRequestDto } from './dtos/create-categories.dto';
+import { UpdateCategoryRequestDto } from './dtos/update-categories.dto';
 
 //Todo: 추후 user와 restaurant 매칭 맞는지 확인하는 로직 추가 필요
 @Injectable()
@@ -22,8 +22,11 @@ export class CategoriesService {
     return categories;
   }
 
-  async createCategory(restaurantId: string, createCategoryDto: CreateCategoryDto): Promise<Categories> {
-    const newCategory = await this.categoryRepository.create({ ...createCategoryDto, restaurant_id: restaurantId });
+  async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<Categories> {
+    const newCategory = await this.categoryRepository.create({
+      ...createCategoryRequestDto,
+      restaurant_id: restaurantId,
+    });
 
     return await this.categoryRepository.save(newCategory);
   }
@@ -31,14 +34,14 @@ export class CategoriesService {
   async updateCategory(
     restaurantId: string,
     categoryId: string,
-    updateCategoryDto: UpdateCategoryDto,
+    updateCategoryRequestDto: UpdateCategoryRequestDto,
   ): Promise<Categories> {
     const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
 
     if (!category) {
       throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
     }
-    const newCategory = { ...category, ...updateCategoryDto };
+    const newCategory = { ...category, ...updateCategoryRequestDto };
     return await this.categoryRepository.save(newCategory);
   }
 

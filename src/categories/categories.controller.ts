@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Categories } from './entities/categories.entity';
-import { CreateCategoryDto } from './dtos/create-categories.dto';
+import { CreateCategoryRequestDto } from './dtos/create-categories.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { UpdateCategoryDto } from './dtos/update-categories.dto';
+import { UpdateCategoryRequestDto } from './dtos/update-categories.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -19,9 +19,9 @@ export class CategoriesController {
   @Post(':restaurant_id')
   async createCategory(
     @Param('restaurant_id') restaurantId: string,
-    @Body() createCategoryDto: CreateCategoryDto,
+    @Body() createCategoryRequestDto: CreateCategoryRequestDto,
   ): Promise<Categories> {
-    return await this.categoriesService.createCategory(restaurantId, createCategoryDto);
+    return await this.categoriesService.createCategory(restaurantId, createCategoryRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -29,9 +29,9 @@ export class CategoriesController {
   async updateCategory(
     @Param('restaurant_id') restaurantId: string,
     @Param('category_id') categoryId: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
+    @Body() updateCategoryRequestDto: UpdateCategoryRequestDto,
   ): Promise<Categories> {
-    return await this.categoriesService.updateCategory(restaurantId, categoryId, updateCategoryDto);
+    return await this.categoriesService.updateCategory(restaurantId, categoryId, updateCategoryRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
