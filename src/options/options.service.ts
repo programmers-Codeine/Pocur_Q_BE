@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Option } from './entities/options.entity';
 import { CreateOptionRequestDto } from './dtos/create-options.dro';
+import { UpdateOptionRequestDto } from './dtos/update-options.dto';
 
 @Injectable()
 export class OptionsService {
@@ -21,15 +22,19 @@ export class OptionsService {
     return await this.optionRepository.save(newOption);
   }
 
-  async updateOption(menuId: string, optionId: string, createOptionDto: CreateOptionRequestDto): Promise<Option> {
+  async updateOption(
+    menuId: string,
+    optionId: string,
+    updateOptionRequestDto: UpdateOptionRequestDto,
+  ): Promise<Option> {
     const option = await this.optionRepository.findOne({ where: { id: optionId, menu_id: menuId } });
 
     if (!option) {
       throw new NotFoundException(`${optionId}에 해당하는 옵션이 없습니다.`);
     }
 
-    option.option_name = createOptionDto.optionName;
-    option.option_price = createOptionDto.optionPrice;
+    option.option_name = updateOptionRequestDto.optionName;
+    option.option_price = updateOptionRequestDto.optionPrice;
 
     return await this.optionRepository.save(option);
   }

@@ -21,9 +21,9 @@ export class OptionsController {
   async updateOption(
     @Param('menu_id') menuId: string,
     @Param('option_id') optionId: string,
-    @Body() createOptionDto: CreateOptionRequestDto,
+    @Body() updateOptionRequestDto: CreateOptionRequestDto,
   ): Promise<Option> {
-    return await this.optionsService.updateOption(menuId, optionId, createOptionDto);
+    return await this.optionsService.updateOption(menuId, optionId, updateOptionRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
