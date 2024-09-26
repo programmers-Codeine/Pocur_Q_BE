@@ -11,7 +11,7 @@ export class OptionsService {
     private readonly optionRepository: Repository<Option>,
   ) {}
 
-  async createOption(restaurantId: string, menuId: string, createOptionDto: CreateOptionDto): Promise<Option> {
+  async createOption(menuId: string, createOptionDto: CreateOptionDto): Promise<Option> {
     const newOption = new Option();
 
     newOption.menu_id = menuId;
@@ -21,12 +21,7 @@ export class OptionsService {
     return await this.optionRepository.save(newOption);
   }
 
-  async updateOption(
-    restaurantId: string,
-    menuId: string,
-    optionId: string,
-    createOptionDto: CreateOptionDto,
-  ): Promise<Option> {
+  async updateOption(menuId: string, optionId: string, createOptionDto: CreateOptionDto): Promise<Option> {
     const option = await this.optionRepository.findOne({ where: { id: optionId, menu_id: menuId } });
 
     if (!option) {
@@ -39,7 +34,7 @@ export class OptionsService {
     return await this.optionRepository.save(option);
   }
 
-  async deleteOption(restaurantId: string, menuId: string, optionId: string): Promise<void> {
+  async deleteOption(menuId: string, optionId: string): Promise<void> {
     const option = await this.optionRepository.findOne({ where: { id: optionId, menu_id: menuId } });
     if (!option) {
       throw new NotFoundException(`메뉴 ID ${menuId}에 해당하는 옵션 ID ${optionId}를 찾을 수 없습니다.`);

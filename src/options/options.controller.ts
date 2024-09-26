@@ -7,35 +7,25 @@ import { CreateOptionDto } from './dtos/create-options.dro';
 @Controller('options')
 export class OptionsController {
   constructor(private readonly optionsService: OptionsService) {}
-
   @UseGuards(JwtAuthGuard)
-  @Post(':restaurant_id/:menu_id')
-  async createOption(
-    @Param('restaurant_id') restaurantId: string,
-    @Param('menu_id') menuId: string,
-    @Body() createOptionDto: CreateOptionDto,
-  ): Promise<Option> {
-    return await this.optionsService.createOption(restaurantId, menuId, createOptionDto);
+  @Post(':menu_id')
+  async createOption(@Param('menu_id') menuId: string, @Body() createOptionDto: CreateOptionDto): Promise<Option> {
+    return await this.optionsService.createOption(menuId, createOptionDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':restaurant_id/:menu_id/:option_id')
+  @Put(':menu_id/:option_id')
   async updateOption(
-    @Param('restaurant_id') restaurantId: string,
     @Param('menu_id') menuId: string,
     @Param('option_id') optionId: string,
     @Body() createOptionDto: CreateOptionDto,
   ): Promise<Option> {
-    return await this.optionsService.updateOption(restaurantId, menuId, optionId, createOptionDto);
+    return await this.optionsService.updateOption(menuId, optionId, createOptionDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':restaurant_id/:menu_id/:option_id')
-  async deleteOption(
-    @Param('restaurant_id') restaurantId: string,
-    @Param('menu_id') menuId: string,
-    @Param('option_id') optionId: string,
-  ): Promise<void> {
-    return await this.optionsService.deleteOption(restaurantId, menuId, optionId);
+  @Delete(':menu_id/:option_id')
+  async deleteOption(@Param('menu_id') menuId: string, @Param('option_id') optionId: string): Promise<void> {
+    return await this.optionsService.deleteOption(menuId, optionId);
   }
 }
