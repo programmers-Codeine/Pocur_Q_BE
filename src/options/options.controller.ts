@@ -3,6 +3,7 @@ import { OptionsService } from './options.service';
 import { Option } from './entities/options.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateOptionRequestDto } from './dtos/create-options.dro';
+import { UpdateOptionRequestDto } from './dtos/update-options.dto';
 
 @Controller('options')
 export class OptionsController {
@@ -21,7 +22,7 @@ export class OptionsController {
   async updateOption(
     @Param('menu_id') menuId: string,
     @Param('option_id') optionId: string,
-    @Body() updateOptionRequestDto: CreateOptionRequestDto,
+    @Body() updateOptionRequestDto: UpdateOptionRequestDto,
   ): Promise<Option> {
     return await this.optionsService.updateOption(menuId, optionId, updateOptionRequestDto);
   }
