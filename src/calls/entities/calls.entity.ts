@@ -10,4 +10,6 @@ export class Call {
 
   @Column({ type: 'varchar', length: 45 })
   call_name: string;
+
+  //Todo: 레스토랑과 관계 설정해주기
 }
