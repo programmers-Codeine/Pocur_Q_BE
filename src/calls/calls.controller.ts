@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CallsService } from './calls.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateCallRequestDto } from './dtos/create-calls.dto';
@@ -17,7 +17,7 @@ export class CallsController {
 
   @UseGuards(JwtAuthGuard)
   @Post(':restaurant_id')
-  async createOption(
+  async createCall(
     @Param('restaurant_id') restaurantId: string,
     @Body() createCallRequestDto: CreateCallRequestDto,
   ): Promise<Call> {
@@ -26,11 +26,17 @@ export class CallsController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':restaurant_id/:call_id')
-  async updateCategory(
+  async updateCall(
     @Param('restaurant_id') restaurantId: string,
     @Param('call_id') callId: string,
     @Body() updateCallRequestDto: UpdateCallRequestDto,
   ): Promise<Call> {
     return await this.callsService.updateCall(restaurantId, callId, updateCallRequestDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':restaurant_id/:call_id')
+  async deleteCall(@Param('restaurant_id') restaurantId: string, @Param('call_id') callId: string): Promise<void> {
+    return await this.callsService.deleteCall(restaurantId, callId);
   }
 }
