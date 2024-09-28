@@ -17,7 +17,7 @@ export class CallsController {
 
   @UseGuards(JwtAuthGuard)
   @Post(':restaurant_id')
-  async createOption(
+  async createCall(
     @Param('restaurant_id') restaurantId: string,
     @Body() createCallRequestDto: CreateCallRequestDto,
   ): Promise<Call> {
@@ -26,7 +26,7 @@ export class CallsController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':restaurant_id/:call_id')
-  async updateCategory(
+  async updateCall(
     @Param('restaurant_id') restaurantId: string,
     @Param('call_id') callId: string,
     @Body() updateCallRequestDto: UpdateCallRequestDto,
