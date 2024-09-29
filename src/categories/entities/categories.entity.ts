@@ -3,7 +3,7 @@ import { Menu } from 'src/menus/entities/menus.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('categories')
-export class Categories {
+export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

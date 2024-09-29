@@ -1,4 +1,4 @@
-import { Categories } from 'src/categories/entities/categories.entity';
+import { Category } from 'src/categories/entities/categories.entity';
 import { Option } from 'src/options/entities/options.entity';
 import { Order } from 'src/orders/entities/orders.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
@@ -61,9 +61,9 @@ export class Menu {
   @OneToMany(() => Order, (order) => order.menu)
   orders: Order[];
 
-  @ManyToOne(() => Categories, (category) => category.menus)
+  @ManyToOne(() => Category, (category) => category.menus)
   @JoinColumn({ name: 'category_id' })
-  category: Categories;
+  category: Category;
 
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.menus, { onDelete: 'CASCADE' })
   restaurant: Restaurant;
