@@ -4,6 +4,7 @@ import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.
 import { Url } from 'src/urls/entities/urls.entity';
 import { Order } from 'src/orders/entities/orders.entity';
 import { Menu } from 'src/menus/entities/menus.entity';
+import { Category } from 'src/categories/entities/categories.entity';
 
 @Entity('restaurants')
 export class Restaurant {
@@ -64,4 +65,7 @@ export class Restaurant {
 
   @OneToMany(() => Menu, (menu) => menu.restaurant)
   menus: Menu[];
+
+  @OneToMany(() => Category, (category) => category.restaurant)
+  category: Category[];
 }
