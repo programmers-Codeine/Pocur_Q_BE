@@ -59,7 +59,7 @@ export class Menus {
 
   @OneToMany(() => Order, (order) => order.menu)
   orders: Order[];
-  
+
   @ManyToOne(() => Categories, (category) => category.menus)
   @JoinColumn({ name: 'category_id' })
   category: Categories;
