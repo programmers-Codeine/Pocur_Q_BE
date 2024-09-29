@@ -1,5 +1,6 @@
 import { Categories } from 'src/categories/entities/categories.entity';
 import { Option } from 'src/options/entities/options.entity';
+import { Order } from 'src/orders/entities/orders.entity';
 import {
   Column,
   CreateDateColumn,
@@ -56,6 +57,9 @@ export class Menus {
   @OneToMany(() => Option, (option) => option.menu, { eager: true, onDelete: 'CASCADE' })
   options: Option[];
 
+  @OneToMany(() => Order, (order) => order.menu)
+  orders: Order[];
+  
   @ManyToOne(() => Categories, (category) => category.menus)
   @JoinColumn({ name: 'category_id' })
   category: Categories;
