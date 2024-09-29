@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity('calls')
 export class Call {
@@ -11,5 +12,6 @@ export class Call {
   @Column({ type: 'varchar', length: 45 })
   call_name: string;
 
-  //Todo: 레스토랑과 관계 설정해주기
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.call, { onDelete: 'CASCADE' })
+  restaurant: Restaurant;
 }
