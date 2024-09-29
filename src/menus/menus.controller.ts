@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { MenusService } from './menus.service';
-import { Menus } from './entities/menus.entity';
+import { Menu } from './entities/menus.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateMenuRequestDto } from './dtos/create-menus.dto';
 import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
@@ -11,13 +11,16 @@ export class MenusController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':restaurant_id')
-  async getAllMenus(@Param('restaurant_id') restaurantId: string): Promise<Menus[]> {
-    return await this.menusService.getAllMenus(restaurantId);
+  async getAllMenus(
+    @Param('restaurant_id') restaurantId: string,
+    @Query('category_id') categoryId?: string,
+  ): Promise<Menu[]> {
+    return await this.menusService.getAllMenus(restaurantId, categoryId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':restaurant_id/:menu_id')
-  async getMenu(@Param('restaurant_id') restaurantId: string, @Param('menu_id') menuId: string): Promise<Menus> {
+  async getMenu(@Param('restaurant_id') restaurantId: string, @Param('menu_id') menuId: string): Promise<Menu> {
     return await this.menusService.getMenu(restaurantId, menuId);
   }
 
@@ -26,7 +29,7 @@ export class MenusController {
   async createMenu(
     @Param('restaurant_id') restaurantId: string,
     @Body() createMenuRequestDto: CreateMenuRequestDto,
-  ): Promise<Menus> {
+  ): Promise<Menu> {
     return await this.menusService.createMenu(restaurantId, createMenuRequestDto);
   }
 
@@ -36,7 +39,7 @@ export class MenusController {
     @Param('restaurant_id') restaurantId: string,
     @Param('menu_id') menuId: string,
     @Body() updateMenuRequestDto: UpdateMenuRequestDto,
-  ): Promise<Menus> {
+  ): Promise<Menu> {
     return await this.menusService.updateMenu(restaurantId, menuId, updateMenuRequestDto);
   }
 

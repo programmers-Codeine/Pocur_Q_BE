@@ -2,6 +2,10 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { IsString, IsInt, MaxLength } from 'class-validator';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { Url } from 'src/urls/entities/urls.entity';
+import { Order } from 'src/orders/entities/orders.entity';
+import { Menu } from 'src/menus/entities/menus.entity';
+import { Category } from 'src/categories/entities/categories.entity';
+import { Call } from 'src/calls/entities/calls.entity';
 
 @Entity('restaurants')
 export class Restaurant {
@@ -56,4 +60,16 @@ export class Restaurant {
 
   @OneToMany(() => Url, (url) => url.restaurant)
   urls: Url[];
+
+  @OneToMany(() => Order, (order) => order.restaurant)
+  orders: Order[];
+
+  @OneToMany(() => Menu, (menu) => menu.restaurant)
+  menus: Menu[];
+
+  @OneToMany(() => Category, (category) => category.restaurant)
+  category: Category[];
+
+  @OneToMany(() => Call, (call) => call.restaurant)
+  call: Call[];
 }

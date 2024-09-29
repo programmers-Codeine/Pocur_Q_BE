@@ -1,16 +1,21 @@
 import { IsString, MaxLength } from 'class-validator';
-import { Menus } from 'src/menus/entities/menus.entity';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Menu } from 'src/menus/entities/menus.entity';
+import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('categories')
-export class Categories {
+export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ type: 'varchar', length: 45 })
-  @IsString()
-  @MaxLength(45)
-  restaurant_id: string;
 
   @Column({ type: 'varchar', length: 45 })
   @IsString()
@@ -23,6 +28,10 @@ export class Categories {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => Menus, (menu) => menu.category, { onDelete: 'CASCADE' })
-  menus: Menus[];
+  @OneToMany(() => Menu, (menu) => menu.category, { onDelete: 'CASCADE' })
+  menus: Menu[];
+
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.category, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'restaurant_id' })
+  restaurant: Restaurant;
 }
