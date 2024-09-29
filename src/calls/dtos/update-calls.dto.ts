@@ -1,7 +1,7 @@
 import { IsString, MaxLength } from 'class-validator';
 
-export class CreateCategoryRequestDto {
+export class UpdateCallRequestDto {
   @IsString()
   @MaxLength(45)
-  categoryName: string;
+  callName: string;
 }

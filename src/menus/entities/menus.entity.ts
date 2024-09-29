@@ -1,6 +1,16 @@
+import { Categories } from 'src/categories/entities/categories.entity';
 import { Option } from 'src/options/entities/options.entity';
 import { Order } from 'src/orders/entities/orders.entity';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('menus')
 export class Menus {
@@ -44,9 +54,13 @@ export class Menus {
   })
   updated_at: Date;
 
-  @OneToMany(() => Option, (option) => option.menu, { eager: true })
+  @OneToMany(() => Option, (option) => option.menu, { eager: true, onDelete: 'CASCADE' })
   options: Option[];
 
   @OneToMany(() => Order, (order) => order.menu)
   orders: Order[];
+  
+  @ManyToOne(() => Categories, (category) => category.menus)
+  @JoinColumn({ name: 'category_id' })
+  category: Categories;
 }
