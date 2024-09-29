@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Menus } from './entities/menus.entity';
+import { Menu } from './entities/menus.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMenuRequestDto } from './dtos/create-menus.dto';
 import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
@@ -8,12 +8,12 @@ import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
 @Injectable()
 export class MenusService {
   constructor(
-    @InjectRepository(Menus)
-    private readonly menuRepository: Repository<Menus>,
+    @InjectRepository(Menu)
+    private readonly menuRepository: Repository<Menu>,
   ) {}
 
   //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
-  async getAllMenus(restaurantId: string, categoryId?: string): Promise<Menus[]> {
+  async getAllMenus(restaurantId: string, categoryId?: string): Promise<Menu[]> {
     const menuFilter = {
       restaurant_id: restaurantId,
       ...(categoryId && { category_id: categoryId }),
@@ -28,7 +28,7 @@ export class MenusService {
     return menus;
   }
 
-  async getMenu(restaurantId: string, menuId: string): Promise<Menus> {
+  async getMenu(restaurantId: string, menuId: string): Promise<Menu> {
     const menu = await this.menuRepository.findOne({
       where: {
         restaurant_id: restaurantId,
@@ -44,8 +44,8 @@ export class MenusService {
     return menu;
   }
 
-  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menus> {
-    const newMenu = new Menus();
+  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
+    const newMenu = new Menu();
 
     newMenu.restaurant_id = restaurantId;
     newMenu.category_id = createMenuRequestDto.categoryId;
@@ -60,7 +60,7 @@ export class MenusService {
     return await this.menuRepository.save(newMenu);
   }
 
-  async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menus> {
+  async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menu> {
     const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant_id: restaurantId } });
 
     if (!menu) {

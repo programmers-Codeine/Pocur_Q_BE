@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
-import { Menus } from 'src/menus/entities/menus.entity';
+import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { OrderSummaryDto } from './dto/order-summary.dto';
@@ -16,8 +16,8 @@ export class OrdersService {
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
 
-    @InjectRepository(Menus)
-    private menusRepository: Repository<Menus>,
+    @InjectRepository(Menu)
+    private menusRepository: Repository<Menu>,
 
     @InjectRepository(Restaurant)
     private restaurantsRepository: Repository<Restaurant>,

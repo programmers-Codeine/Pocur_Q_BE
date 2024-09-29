@@ -13,7 +13,7 @@ import {
 } from 'typeorm';
 
 @Entity('menus')
-export class Menus {
+export class Menu {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

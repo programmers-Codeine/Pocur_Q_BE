@@ -1,5 +1,5 @@
 import { IsString, MaxLength } from 'class-validator';
-import { Menus } from 'src/menus/entities/menus.entity';
+import { Menu } from 'src/menus/entities/menus.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('categories')
@@ -23,6 +23,6 @@ export class Categories {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => Menus, (menu) => menu.category, { onDelete: 'CASCADE' })
-  menus: Menus[];
+  @OneToMany(() => Menu, (menu) => menu.category, { onDelete: 'CASCADE' })
+  menus: Menu[];
 }
