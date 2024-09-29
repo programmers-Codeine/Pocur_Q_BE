@@ -14,8 +14,9 @@ export class CategoriesService {
   ) {}
 
   async getCategory(restaurantId: string): Promise<Category[]> {
-    const categories = await this.categoryRepository.find({ where: { restaurant_id: restaurantId } });
-    if (!categories) {
+    const categories = await this.categoryRepository.find({ where: { restaurant: { id: restaurantId } } });
+
+    if (!categories.length) {
       throw new NotFoundException('레스토랑의 카테고리를 찾지 못했습니다.');
     }
 
@@ -23,10 +24,10 @@ export class CategoriesService {
   }
 
   async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<Category> {
-    const newCategory = new Category();
-
-    newCategory.restaurant_id = restaurantId;
-    newCategory.category_name = createCategoryRequestDto.categoryName;
+    const newCategory = this.categoryRepository.create({
+      ...createCategoryRequestDto,
+      restaurant: { id: restaurantId },
+    });
 
     return await this.categoryRepository.save(newCategory);
   }
@@ -36,19 +37,23 @@ export class CategoriesService {
     categoryId: string,
     updateCategoryRequestDto: UpdateCategoryRequestDto,
   ): Promise<Category> {
-    const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId, restaurant: { id: restaurantId } },
+    });
 
     if (!category) {
       throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
     }
 
-    category.category_name = updateCategoryRequestDto.categoryName;
+    Object.assign(category, updateCategoryRequestDto);
 
     return await this.categoryRepository.save(category);
   }
 
   async deleteCategory(restaurantId: string, categoryId: string): Promise<void> {
-    const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId, restaurant: { id: restaurantId } },
+    });
 
     if (!category) {
       throw new NotFoundException(

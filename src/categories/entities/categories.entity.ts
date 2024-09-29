@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -15,11 +16,6 @@ import {
 export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ type: 'varchar', length: 45 })
-  @IsString()
-  @MaxLength(45)
-  restaurant_id: string;
 
   @Column({ type: 'varchar', length: 45 })
   @IsString()
@@ -36,5 +32,6 @@ export class Category {
   menus: Menu[];
 
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.category, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'restaurant_id' })
   restaurant: Restaurant;
 }

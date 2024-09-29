@@ -7,9 +7,6 @@ export class Option {
   id: string;
 
   @Column({ type: 'varchar', length: 45 })
-  menu_id: string;
-
-  @Column({ type: 'varchar', length: 45 })
   option_name: string;
 
   @Column({ type: 'int' })

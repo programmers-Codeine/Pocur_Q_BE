@@ -19,12 +19,6 @@ export class Menu {
   id: string;
 
   @Column({ type: 'varchar', length: 45 })
-  restaurant_id: string;
-
-  @Column({ type: 'varchar', length: 45 })
-  category_id: string;
-
-  @Column({ type: 'varchar', length: 45 })
   menu_name: string;
 
   @Column({ type: 'int' })
@@ -66,5 +60,6 @@ export class Menu {
   category: Category;
 
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.menus, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'restaurant_id' })
   restaurant: Restaurant;
 }
