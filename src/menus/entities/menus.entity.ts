@@ -1,6 +1,7 @@
 import { Categories } from 'src/categories/entities/categories.entity';
 import { Option } from 'src/options/entities/options.entity';
 import { Order } from 'src/orders/entities/orders.entity';
+import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import {
   Column,
   CreateDateColumn,
@@ -63,4 +64,7 @@ export class Menu {
   @ManyToOne(() => Categories, (category) => category.menus)
   @JoinColumn({ name: 'category_id' })
   category: Categories;
+
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.menus, { onDelete: 'CASCADE' })
+  restaurant: Restaurant;
 }
