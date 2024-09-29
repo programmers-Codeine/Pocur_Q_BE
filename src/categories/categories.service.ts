@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Categories } from './entities/categories.entity';
+import { Category } from './entities/categories.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryRequestDto } from './dtos/create-categories.dto';
@@ -9,24 +9,25 @@ import { UpdateCategoryRequestDto } from './dtos/update-categories.dto';
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectRepository(Categories)
-    private readonly categoryRepository: Repository<Categories>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async getCategory(restaurantId: string): Promise<Categories[]> {
-    const categories = await this.categoryRepository.find({ where: { restaurant_id: restaurantId } });
-    if (!categories) {
+  async getCategory(restaurantId: string): Promise<Category[]> {
+    const categories = await this.categoryRepository.find({ where: { restaurant: { id: restaurantId } } });
+
+    if (!categories.length) {
       throw new NotFoundException('레스토랑의 카테고리를 찾지 못했습니다.');
     }
 
     return categories;
   }
 
-  async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<Categories> {
-    const newCategory = new Categories();
-
-    newCategory.restaurant_id = restaurantId;
-    newCategory.category_name = createCategoryRequestDto.categoryName;
+  async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<Category> {
+    const newCategory = this.categoryRepository.create({
+      ...createCategoryRequestDto,
+      restaurant: { id: restaurantId },
+    });
 
     return await this.categoryRepository.save(newCategory);
   }
@@ -35,20 +36,24 @@ export class CategoriesService {
     restaurantId: string,
     categoryId: string,
     updateCategoryRequestDto: UpdateCategoryRequestDto,
-  ): Promise<Categories> {
-    const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
+  ): Promise<Category> {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId, restaurant: { id: restaurantId } },
+    });
 
     if (!category) {
       throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
     }
 
-    category.category_name = updateCategoryRequestDto.categoryName;
+    Object.assign(category, updateCategoryRequestDto);
 
     return await this.categoryRepository.save(category);
   }
 
   async deleteCategory(restaurantId: string, categoryId: string): Promise<void> {
-    const category = await this.categoryRepository.findOne({ where: { id: categoryId, restaurant_id: restaurantId } });
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId, restaurant: { id: restaurantId } },
+    });
 
     if (!category) {
       throw new NotFoundException(

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
-import { Menus } from 'src/menus/entities/menus.entity';
+import { Menu } from 'src/menus/entities/menus.entity';
 
 @Entity('orders')
 export class Order {
@@ -39,7 +39,7 @@ export class Order {
   @JoinColumn({ name: 'restaurantTable_id' })
   restaurantTable: RestaurantTable;
 
-  @ManyToOne(() => Menus, (menu) => menu.orders)
+  @ManyToOne(() => Menu, (menu) => menu.orders)
   @JoinColumn({ name: 'menu_id' })
-  menu: Menus;
+  menu: Menu;
 }

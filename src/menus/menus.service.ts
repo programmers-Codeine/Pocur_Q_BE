@@ -1,25 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Menus } from './entities/menus.entity';
+import { Menu } from './entities/menus.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMenuRequestDto } from './dtos/create-menus.dto';
 import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
+import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 
 @Injectable()
 export class MenusService {
   constructor(
-    @InjectRepository(Menus)
-    private readonly menuRepository: Repository<Menus>,
+    @InjectRepository(Menu)
+    private readonly menuRepository: Repository<Menu>,
+    @InjectRepository(Restaurant)
+    private readonly restaurantRepository: Repository<Menu>,
   ) {}
 
   //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
-  async getAllMenus(restaurantId: string, categoryId?: string): Promise<Menus[]> {
-    const menuFilter = {
-      restaurant_id: restaurantId,
-      ...(categoryId && { category_id: categoryId }),
-    };
+  async getAllMenus(restaurantId: string, categoryId?: string): Promise<Menu[]> {
+    const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
 
-    const menus = await this.menuRepository.find({ where: menuFilter, relations: ['options'] });
+    if (!restaurant) {
+      throw new NotFoundException(`${restaurantId}에 해당하는 식당을 찾지 못했습니다.`);
+    }
+
+    const menus = await this.menuRepository.find({
+      where: {
+        restaurant: { id: restaurantId },
+        ...(categoryId && { category: { id: categoryId } }),
+      },
+      relations: ['options'],
+    });
 
     if (menus.length === 0) {
       throw new NotFoundException('해당 조건에 맞는 메뉴가 없습니다.');
@@ -28,11 +38,11 @@ export class MenusService {
     return menus;
   }
 
-  async getMenu(restaurantId: string, menuId: string): Promise<Menus> {
+  async getMenu(restaurantId: string, menuId: string): Promise<Menu> {
     const menu = await this.menuRepository.findOne({
       where: {
-        restaurant_id: restaurantId,
         id: menuId,
+        restaurant: { id: restaurantId },
       },
       relations: ['options'],
     });
@@ -44,47 +54,35 @@ export class MenusService {
     return menu;
   }
 
-  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menus> {
-    const newMenu = new Menus();
-
-    newMenu.restaurant_id = restaurantId;
-    newMenu.category_id = createMenuRequestDto.categoryId;
-    newMenu.menu_name = createMenuRequestDto.menuName;
-    newMenu.price = createMenuRequestDto.price;
-    newMenu.menu_detail = createMenuRequestDto.menuDetail;
-    newMenu.menu_img = createMenuRequestDto.menuImg;
-    newMenu.origin = createMenuRequestDto.origin;
-    newMenu.is_active = createMenuRequestDto.isActivate;
-    newMenu.sold_out = createMenuRequestDto.soldOut;
+  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
+    const newMenu = this.menuRepository.create({
+      ...createMenuRequestDto,
+      restaurant: { id: restaurantId },
+      category: createMenuRequestDto.categoryId ? { id: createMenuRequestDto.categoryId } : null,
+    });
 
     return await this.menuRepository.save(newMenu);
   }
 
-  async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menus> {
-    const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant_id: restaurantId } });
+  async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menu> {
+    const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant: { id: restaurantId } } });
 
     if (!menu) {
       throw new NotFoundException(`${menuId}에 해당하는 메뉴가 없습니다.`);
     }
 
-    menu.id = menuId;
-    menu.restaurant_id = restaurantId;
-    menu.category_id = updateMenuRequestDto.categoryId;
-    menu.menu_name = updateMenuRequestDto.menuName;
-    menu.price = updateMenuRequestDto.price;
-    menu.menu_detail = updateMenuRequestDto.menuDetail;
-    menu.menu_img = updateMenuRequestDto.menuImg;
-    menu.origin = updateMenuRequestDto.origin;
-    menu.is_active = updateMenuRequestDto.isActivate;
-    menu.sold_out = updateMenuRequestDto.soldOut;
+    Object.assign(menu, {
+      ...updateMenuRequestDto,
+      category: updateMenuRequestDto.categoryId ? { id: updateMenuRequestDto.categoryId } : null,
+    });
 
     return await this.menuRepository.save(menu);
   }
 
   async deleteMenu(restaurantId: string, menuId: string): Promise<void> {
-    const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant_id: restaurantId } });
+    const menu = await this.menuRepository.findOne({ where: { id: menuId, restaurant: { id: restaurantId } } });
     if (!menu) {
-      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 해당하는 카테고리 ID ${menuId}를 찾을 수 없습니다.`);
+      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 해당하는 메뉴 ID ${menuId}를 찾을 수 없습니다.`);
     }
 
     await this.menuRepository.remove(menu);

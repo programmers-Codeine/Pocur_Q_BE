@@ -1,6 +1,7 @@
-import { Categories } from 'src/categories/entities/categories.entity';
+import { Category } from 'src/categories/entities/categories.entity';
 import { Option } from 'src/options/entities/options.entity';
 import { Order } from 'src/orders/entities/orders.entity';
+import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,15 +14,9 @@ import {
 } from 'typeorm';
 
 @Entity('menus')
-export class Menus {
+export class Menu {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ type: 'varchar', length: 45 })
-  restaurant_id: string;
-
-  @Column({ type: 'varchar', length: 45 })
-  category_id: string;
 
   @Column({ type: 'varchar', length: 45 })
   menu_name: string;
@@ -60,7 +55,11 @@ export class Menus {
   @OneToMany(() => Order, (order) => order.menu)
   orders: Order[];
 
-  @ManyToOne(() => Categories, (category) => category.menus)
+  @ManyToOne(() => Category, (category) => category.menus)
   @JoinColumn({ name: 'category_id' })
-  category: Categories;
+  category: Category;
+
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.menus, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'restaurant_id' })
+  restaurant: Restaurant;
 }
