@@ -1,31 +1,32 @@
-import { Controller, Get, Post, Body, Put, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, UseGuards, Request } from '@nestjs/common';
 import { RestaurantsService } from './restaurants.service';
 import { CreateRestaurantDto } from './dto/create-restaurants.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurants.dto';
 import { Restaurant } from './entities/restaurants.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
-  @Get(':restaurant_id')
-  async getRestaurant(@Param('restaurant_id') restaurantId: string): Promise<Restaurant> {
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getRestaurant(@Request() req): Promise<Restaurant> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.restaurantsService.getRestaurantById(restaurantId);
   }
 
-  @Post(':user_id')
-  async createRestaurant(
-    @Param('user_id') userId: string,
-    @Body() createRestaurantDto: CreateRestaurantDto,
-  ): Promise<Restaurant> {
+  @Post()
+  async createRestaurant(@Request() req, @Body() createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
+    const userId = req.user.userId;
     return await this.restaurantsService.createRestaurant(userId, createRestaurantDto);
   }
 
-  @Put(':restaurant_id')
-  async updateRestaurant(
-    @Param('restaurant_id') restaurantId: string,
-    @Body() updateRestaurantDto: UpdateRestaurantDto,
-  ): Promise<Restaurant> {
+  @Put()
+  async updateRestaurant(@Request() req, @Body() updateRestaurantDto: UpdateRestaurantDto): Promise<Restaurant> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.restaurantsService.updateRestaurant(restaurantId, updateRestaurantDto);
   }
 }

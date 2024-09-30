@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { CallsService } from './calls.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateCallRequestDto } from './dtos/create-calls.dto';
@@ -10,33 +10,38 @@ export class CallsController {
   constructor(private readonly callsService: CallsService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get(':restaurant_id')
-  async getCalls(@Param('restaurant_id') restaurantId: string): Promise<Call[]> {
+  @Get()
+  async getCalls(@Request() req): Promise<Call[]> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.callsService.getCalls(restaurantId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post(':restaurant_id')
-  async createCall(
-    @Param('restaurant_id') restaurantId: string,
-    @Body() createCallRequestDto: CreateCallRequestDto,
-  ): Promise<Call> {
+  @Post()
+  async createCall(@Request() req, @Body() createCallRequestDto: CreateCallRequestDto): Promise<Call> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.callsService.createCall(restaurantId, createCallRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':restaurant_id/:call_id')
+  @Put(':call_id')
   async updateCall(
-    @Param('restaurant_id') restaurantId: string,
+    @Request() req,
     @Param('call_id') callId: string,
     @Body() updateCallRequestDto: UpdateCallRequestDto,
   ): Promise<Call> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.callsService.updateCall(restaurantId, callId, updateCallRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':restaurant_id/:call_id')
-  async deleteCall(@Param('restaurant_id') restaurantId: string, @Param('call_id') callId: string): Promise<void> {
+  @Delete(':call_id')
+  async deleteCall(@Request() req, @Param('call_id') callId: string): Promise<void> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.callsService.deleteCall(restaurantId, callId);
   }
 }

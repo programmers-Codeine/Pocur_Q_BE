@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Delete, Get } from '@nestjs/common';
+import { Controller, Post, Delete, Get, Request } from '@nestjs/common';
 import { RestaurantTablesService } from './restaurantTables.service';
 import { RestaurantTable } from './entities/restaurantTables.entity';
 
@@ -6,18 +6,24 @@ import { RestaurantTable } from './entities/restaurantTables.entity';
 export class RestaurantTablesController {
   constructor(private readonly restaurantTablesService: RestaurantTablesService) {}
 
-  @Get(':restaurant_id')
-  async getTablesByRestaurant(@Param('restaurant_id') restaurantId: string): Promise<RestaurantTable[]> {
+  @Get()
+  async getTablesByRestaurant(@Request() req): Promise<RestaurantTable[]> {
+    const restaurantId = req.user.restaurantId;
+
     return this.restaurantTablesService.findTablesByRestaurantId(restaurantId);
   }
 
-  @Post('add/:restaurant_id')
-  async addTable(@Param('restaurant_id') restaurantId: string): Promise<RestaurantTable> {
+  @Post('add')
+  async addTable(@Request() req): Promise<RestaurantTable> {
+    const restaurantId = req.user.restaurantId;
+
     return this.restaurantTablesService.addTableWithNextTableNum(restaurantId);
   }
 
-  @Delete('remove/:restaurant_id')
-  async removeMaxTable(@Param('restaurant_id') restaurantId: string): Promise<void> {
+  @Delete('remove')
+  async removeMaxTable(@Request() req): Promise<void> {
+    const restaurantId = req.user.restaurantId;
+
     return this.restaurantTablesService.removeTableWithMaxTableNum(restaurantId);
   }
 }

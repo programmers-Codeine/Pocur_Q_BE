@@ -57,7 +57,12 @@ export class UsersService {
     // user가 없으면 처음 로그인한 것으로 간주
     const isFirstLogin = !isUserInRestaurants;
 
-    const payload = { email: user.email, sub: user.id, nickname: user.nickname };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      nickname: user.nickname,
+      restaurantId: isUserInRestaurants ? isUserInRestaurants.id : null,
+    };
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken, isFirstLogin };
