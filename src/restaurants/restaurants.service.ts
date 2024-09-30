@@ -31,8 +31,8 @@ export class RestaurantsService {
   async createRestaurant(userId: string, createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
     const newRestaurant = this.restaurantRepository.create({
       ...createRestaurantDto,
-      user_id: userId,
-      total_table_count: createRestaurantDto.default_table_count,
+      userId,
+      totalTableCount: createRestaurantDto.default_table_count,
     });
 
     const savedRestaurant = await this.restaurantRepository.save(newRestaurant);
