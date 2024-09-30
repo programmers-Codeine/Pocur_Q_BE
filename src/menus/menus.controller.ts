@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { MenusService } from './menus.service';
 import { Menu } from './entities/menus.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -10,42 +10,46 @@ export class MenusController {
   constructor(private readonly menusService: MenusService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get(':restaurant_id')
-  async getAllMenus(
-    @Param('restaurant_id') restaurantId: string,
-    @Query('category_id') categoryId?: string,
-  ): Promise<Menu[]> {
+  @Get()
+  async getAllMenus(@Request() req, @Query('category_id') categoryId?: string): Promise<Menu[]> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.menusService.getAllMenus(restaurantId, categoryId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':restaurant_id/:menu_id')
-  async getMenu(@Param('restaurant_id') restaurantId: string, @Param('menu_id') menuId: string): Promise<Menu> {
+  @Get(':menu_id')
+  async getMenu(@Request() req, @Param('menu_id') menuId: string): Promise<Menu> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.menusService.getMenu(restaurantId, menuId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post(':restaurant_id')
-  async createMenu(
-    @Param('restaurant_id') restaurantId: string,
-    @Body() createMenuRequestDto: CreateMenuRequestDto,
-  ): Promise<Menu> {
+  @Post()
+  async createMenu(@Request() req, @Body() createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.menusService.createMenu(restaurantId, createMenuRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':restaurant_id/:menu_id')
+  @Put(':menu_id')
   async updateMenu(
-    @Param('restaurant_id') restaurantId: string,
+    @Request() req,
     @Param('menu_id') menuId: string,
     @Body() updateMenuRequestDto: UpdateMenuRequestDto,
   ): Promise<Menu> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.menusService.updateMenu(restaurantId, menuId, updateMenuRequestDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':restaurant_id/:menu_id')
-  async deleteCategory(@Param('restaurant_id') restaurantId: string, @Param('menu_id') menuId: string): Promise<void> {
+  @Delete(':menu_id')
+  async deleteCategory(@Request() req, @Param('menu_id') menuId: string): Promise<void> {
+    const restaurantId = req.user.restaurantId;
+
     return await this.menusService.deleteMenu(restaurantId, menuId);
   }
 }

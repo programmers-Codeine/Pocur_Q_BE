@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Request } from '@nestjs/common';
 import { UrlsService } from './urls.service';
 import { Url } from './entities/urls.entity';
 
@@ -6,8 +6,10 @@ import { Url } from './entities/urls.entity';
 export class UrlsController {
   constructor(private readonly urlsService: UrlsService) {}
 
-  @Get(':restaurant_id')
-  async getUrlsByRestaurant(@Param('restaurant_id') restaurantId: string): Promise<Url[]> {
+  @Get()
+  async getUrlsByRestaurant(@Request() req): Promise<Url[]> {
+    const restaurantId = req.user.restaurantId;
+
     return this.urlsService.findUrlsByRestaurantId(restaurantId);
   }
 }
