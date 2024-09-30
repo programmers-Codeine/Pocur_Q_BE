@@ -12,7 +12,7 @@ async function bootstrap() {
     origin: corsOrigins,
     methods: 'GET,PUT,POST,DELETE',
     credentials: true,
-    allowedHeaders: ['Authorization'],
+    allowedHeaders: ['Authorization', 'Content-Type'],
   });
   app.useLogger(console);
   app.use(cookieParser());
