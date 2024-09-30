@@ -22,7 +22,7 @@ export class RestaurantsService {
   async getRestaurantById(restaurantId: string): Promise<Restaurant> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
-      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+      throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑을 찾을 수 없습니다.`);
     }
 
     return restaurant;
@@ -55,7 +55,7 @@ export class RestaurantsService {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
 
     if (!restaurant) {
-      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+      throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑을 찾을 수 없습니다.`);
     }
 
     const newRestaurant = { ...restaurant, ...updateRestaurantDto };
