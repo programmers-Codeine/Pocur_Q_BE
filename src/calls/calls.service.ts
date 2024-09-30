@@ -31,7 +31,7 @@ export class CallsService {
     }
 
     const newCall = this.callRepository.create({
-      call_name: createCallRequestDto.callName,
+      callName: createCallRequestDto.callName,
       restaurant,
     });
 
@@ -45,7 +45,7 @@ export class CallsService {
       throw new NotFoundException(`ID ${callId}에 해당하는 호출을 찾을 수 없습니다.`);
     }
 
-    call.call_name = updateCallRequestDto.callName;
+    call.callName = updateCallRequestDto.callName;
 
     return await this.callRepository.save(call);
   }

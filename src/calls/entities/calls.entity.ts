@@ -6,8 +6,8 @@ export class Call {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 45 })
-  call_name: string;
+  @Column({ name: 'call_name', type: 'varchar', length: 45 })
+  callName: string;
 
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.call, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'restaurant_id' })
