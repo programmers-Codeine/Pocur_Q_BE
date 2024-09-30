@@ -45,7 +45,7 @@ export class OrdersService {
     return orders.map((order) => ({
       id: order.id,
       table_num: order.restaurantTable.table_num,
-      menu_name: order.menu.menu_name,
+      menu_name: order.menu.menuName,
       price: order.menu.price,
       count: order.count,
       total_price: order.total_price,
@@ -66,7 +66,7 @@ export class OrdersService {
     return orders.map((order) => ({
       id: order.id,
       table_num: order.restaurantTable.table_num,
-      menu_name: order.menu.menu_name,
+      menu_name: order.menu.menuName,
       price: order.menu.price,
       count: order.count,
     }));
@@ -113,7 +113,7 @@ export class OrdersService {
     this.ordersGateway.sendOrderUpdate({
       id: savedOrder.id,
       table_num: restaurantTable.table_num,
-      menu_name: menu.menu_name,
+      menu_name: menu.menuName,
       count,
       total_price,
     });

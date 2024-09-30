@@ -17,10 +17,10 @@ export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 45 })
+  @Column({ name: 'category_name', type: 'varchar', length: 45 })
   @IsString()
   @MaxLength(45)
-  category_name: string;
+  categoryName: string;
 
   @CreateDateColumn()
   created_at: Date;
