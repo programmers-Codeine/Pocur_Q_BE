@@ -29,28 +29,23 @@ export class RestaurantsService {
   }
 
   async createRestaurant(userId: string, createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
-    // 1. Restaurant 엔티티 생성
     const newRestaurant = this.restaurantRepository.create({
       ...createRestaurantDto,
       user_id: userId,
-      total_table_count: createRestaurantDto.default_table_count, // total_table_count는 default_table_count로 설정
+      total_table_count: createRestaurantDto.default_table_count,
     });
 
-    // 2. Restaurant 저장
     const savedRestaurant = await this.restaurantRepository.save(newRestaurant);
 
-    // 3. RestaurantTable 및 URL 엔티티들 생성 (1부터 default_table_count까지)
     const tableCount = createRestaurantDto.default_table_count;
     for (let i = 1; i <= tableCount; i++) {
-      // 테이블 생성
       const newTable = this.restaurantTableRepository.create({
         restaurant: savedRestaurant,
         table_num: i,
       });
-      await this.restaurantTableRepository.save(newTable); // 테이블 저장
+      await this.restaurantTableRepository.save(newTable);
 
-      // URL 생성
-      await this.urlsService.createUrl(savedRestaurant, i); // URL 저장
+      await this.urlsService.createUrl(savedRestaurant, i);
     }
 
     return savedRestaurant;
