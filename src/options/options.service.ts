@@ -24,8 +24,8 @@ export class OptionsService {
 
     const newOption = this.optionRepository.create({
       menu,
-      option_name: createOptionRequestDto.optionName,
-      option_price: createOptionRequestDto.optionPrice,
+      optionName: createOptionRequestDto.optionName,
+      optionPrice: createOptionRequestDto.optionPrice,
     });
 
     return await this.optionRepository.save(newOption);
@@ -45,8 +45,8 @@ export class OptionsService {
       throw new NotFoundException(`${menuId}에 해당하는 옵션 ${optionId}을 찾지 못했습니다. `);
     }
 
-    option.option_name = updateOptionRequestDto.optionName;
-    option.option_price = updateOptionRequestDto.optionPrice;
+    option.optionName = updateOptionRequestDto.optionName;
+    option.optionPrice = updateOptionRequestDto.optionPrice;
 
     return await this.optionRepository.save(option);
   }
