@@ -5,11 +5,11 @@ import { UpdateRestaurantDto } from './dto/update-restaurants.dto';
 import { Restaurant } from './entities/restaurants.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getRestaurant(@Request() req): Promise<Restaurant> {
     const restaurantId = req.user.restaurantId;

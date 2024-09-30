@@ -1,7 +1,9 @@
-import { Controller, Post, Delete, Get, Request } from '@nestjs/common';
+import { Controller, Post, Delete, Get, Request, UseGuards } from '@nestjs/common';
 import { RestaurantTablesService } from './restaurantTables.service';
 import { RestaurantTable } from './entities/restaurantTables.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('restaurantTables')
 export class RestaurantTablesController {
   constructor(private readonly restaurantTablesService: RestaurantTablesService) {}

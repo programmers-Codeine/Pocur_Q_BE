@@ -6,11 +6,11 @@ import { OrderSummaryDto } from './dto/order-summary.dto';
 import { OrderTableSummaryDto } from './dto/order-table-summary.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('table/:table_num')
   async findAllOrdersByRestaurantAndTable(
     @Request() req,
@@ -21,7 +21,6 @@ export class OrdersController {
     return this.ordersService.findAllOrdersByRestaurantAndTable(restaurant_id, table_num);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAllOrdersByRestaurant(@Request() req): Promise<OrderSummaryDto[]> {
     const restaurant_id = req.user.restaurantId;
@@ -29,7 +28,6 @@ export class OrdersController {
     return this.ordersService.findAllOrdersByRestaurant(restaurant_id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post(':restaurantTable_id')
   async createOrder(
     @Request() req,
