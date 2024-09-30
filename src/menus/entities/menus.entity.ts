@@ -18,26 +18,26 @@ export class Menu {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 45 })
-  menu_name: string;
+  @Column({ name: 'menu_name', type: 'varchar', length: 45 })
+  menuName: string;
 
   @Column({ type: 'int' })
   price: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  menu_detail: string;
+  @Column({ name: 'menu_detail', type: 'varchar', length: 50, nullable: true })
+  menuDetail: string;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
-  menu_img: string;
+  @Column({ name: 'menu_img', type: 'varchar', length: 45, nullable: true })
+  menuImg: string;
 
   @Column({ type: 'varchar', length: 45, nullable: true })
   origin: string;
 
-  @Column({ default: true })
-  is_active: boolean;
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
 
-  @Column({ default: false })
-  sold_out: boolean;
+  @Column({ name: 'sold_out', default: false })
+  soldOut: boolean;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   created_at: Date;
