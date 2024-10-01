@@ -25,25 +25,22 @@ export class RestaurantTablesService {
 
     return await this.restaurantTableRepository.find({
       where: { restaurant: { id: restaurantId } },
-      order: { table_num: 'ASC' }, // table_num을 오름차순으로 정렬
+      order: { table_num: 'ASC' },
     });
   }
 
   async addTableWithNextTableNum(restaurantId: string): Promise<RestaurantTable> {
-    // 1. 레스토랑이 존재하는지 확인
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
     }
 
-    // 2. 해당 레스토랑의 가장 큰 table_num을 찾기
     const lastTable = await this.restaurantTableRepository
       .createQueryBuilder('table')
       .where('table.restaurant_id = :restaurantId', { restaurantId })
       .orderBy('table.table_num', 'DESC')
       .getOne();
 
-    // 3. 가장 큰 table_num 값보다 1 큰 값을 새로운 테이블로 추가
     const newTableNum = lastTable ? lastTable.table_num + 1 : 1;
 
     const newTable = this.restaurantTableRepository.create({
@@ -51,45 +48,37 @@ export class RestaurantTablesService {
       table_num: newTableNum,
     });
 
-    // 4. 새로운 테이블 저장
     const savedTable = await this.restaurantTableRepository.save(newTable);
 
-    // 5. 해당 테이블에 맞는 URL 생성 및 저장
-    await this.urlsService.createUrl(restaurant, newTableNum); // URL 생성
+    await this.urlsService.createUrl(restaurant, newTableNum);
 
     return savedTable;
   }
 
   async removeTableWithMaxTableNum(restaurantId: string): Promise<void> {
-    // 1. 레스토랑이 존재하는지 확인
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
     }
 
-    // 2. 해당 레스토랑의 가장 큰 table_num을 찾기
     const lastTable = await this.restaurantTableRepository
       .createQueryBuilder('table')
       .where('table.restaurant_id = :restaurantId', { restaurantId })
       .orderBy('table.table_num', 'DESC')
       .getOne();
 
-    // 3. 가장 큰 table_num이 존재하지 않으면 예외 발생
     if (!lastTable) {
       throw new NotFoundException(`No tables found for restaurant with ID ${restaurantId}`);
     }
 
-    // 4. 가장 큰 table_num이 restaurant의 default_table_count와 동일하면 삭제 불가
     if (lastTable.table_num <= restaurant.defaultTableCount) {
       throw new BadRequestException(
         `기본 테이블은 삭제 할 수 없습니다. 기본 테이블 수 : (${restaurant.defaultTableCount})`,
       );
     }
 
-    // 5. URL 삭제 (해당 table_num과 restaurant_id에 맞는 URL 삭제)
     await this.urlsService.deleteUrlByTableNumAndRestaurantId(restaurantId, lastTable.table_num);
 
-    // 6. 테이블 삭제
     await this.restaurantTableRepository.remove(lastTable);
   }
 }
