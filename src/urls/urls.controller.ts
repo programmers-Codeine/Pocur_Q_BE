@@ -9,9 +9,9 @@ export class UrlsController {
   constructor(private readonly urlsService: UrlsService) {}
 
   @Get()
-  async getUrlsByRestaurant(@Request() req): Promise<Url[]> {
+  async getUrls(@Request() req): Promise<Url[]> {
     const restaurantId = req.user.restaurantId;
 
-    return this.urlsService.findUrlsByRestaurantId(restaurantId);
+    return this.urlsService.getUrls(restaurantId);
   }
 }

@@ -11,7 +11,7 @@ export class UrlsService {
     private readonly urlRepository: Repository<Url>,
   ) {}
 
-  async findUrlsByRestaurantId(restaurantId: string): Promise<Url[]> {
+  async getUrls(restaurantId: string): Promise<Url[]> {
     return await this.urlRepository.find({
       where: { restaurant: { id: restaurantId } },
       order: {
@@ -28,7 +28,7 @@ export class UrlsService {
     return await this.urlRepository.save(newUrl);
   }
 
-  async deleteUrlByTableNumAndRestaurantId(restaurantId: string, tableNum: number): Promise<void> {
+  async deleteUrl(restaurantId: string, tableNum: number): Promise<void> {
     const urlToDelete = await this.urlRepository.findOne({
       where: {
         restaurant: { id: restaurantId },
