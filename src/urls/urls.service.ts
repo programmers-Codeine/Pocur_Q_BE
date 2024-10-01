@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Url } from './entities/urls.entity';
@@ -36,8 +36,10 @@ export class UrlsService {
       },
     });
 
-    if (urlToDelete) {
-      await this.urlRepository.remove(urlToDelete);
+    if (!urlToDelete) {
+      throw new NotFoundException(`URL이 존재하지 않습니다: restaurantId=${restaurantId}, tableNum=${tableNum}`);
     }
+
+    await this.urlRepository.remove(urlToDelete);
   }
 }
