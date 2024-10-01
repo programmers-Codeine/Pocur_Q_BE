@@ -20,7 +20,7 @@ export class RestaurantTablesService {
   async getTables(restaurantId: string): Promise<RestaurantTable[]> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
-      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+      throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑을 찾을 수 없습니다.`);
     }
 
     return await this.restaurantTableRepository.find({
@@ -32,7 +32,7 @@ export class RestaurantTablesService {
   async addTable(restaurantId: string): Promise<RestaurantTable> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
-      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+      throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑을 찾을 수 없습니다.`);
     }
 
     const lastTable = await this.restaurantTableRepository
@@ -61,7 +61,7 @@ export class RestaurantTablesService {
   async removeTable(restaurantId: string): Promise<void> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
-      throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
+      throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑을 찾을 수 없습니다.`);
     }
 
     const lastTable = await this.restaurantTableRepository
@@ -69,10 +69,6 @@ export class RestaurantTablesService {
       .where('table.restaurant_id = :restaurantId', { restaurantId })
       .orderBy('table.table_num', 'DESC')
       .getOne();
-
-    if (!lastTable) {
-      throw new NotFoundException(`No tables found for restaurant with ID ${restaurantId}`);
-    }
 
     if (lastTable.table_num <= restaurant.defaultTableCount) {
       throw new BadRequestException(
