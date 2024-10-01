@@ -5,5 +5,5 @@ export class CreateRestaurantDto {
   name: string;
 
   @IsInt()
-  default_table_count: number;
+  defaultTableCount: number;
 }
