@@ -80,9 +80,9 @@ export class RestaurantTablesService {
     }
 
     // 4. 가장 큰 table_num이 restaurant의 default_table_count와 동일하면 삭제 불가
-    if (lastTable.table_num <= restaurant.default_table_count) {
+    if (lastTable.table_num <= restaurant.defaultTableCount) {
       throw new BadRequestException(
-        `기본 테이블은 삭제 할 수 없습니다. 기본 테이블 수 : (${restaurant.default_table_count})`,
+        `기본 테이블은 삭제 할 수 없습니다. 기본 테이블 수 : (${restaurant.defaultTableCount})`,
       );
     }
 
