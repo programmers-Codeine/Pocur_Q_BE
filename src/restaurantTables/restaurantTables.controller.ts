@@ -15,14 +15,14 @@ export class RestaurantTablesController {
     return this.restaurantTablesService.findTablesByRestaurantId(restaurantId);
   }
 
-  @Post('add')
+  @Post()
   async addTable(@Request() req): Promise<RestaurantTable> {
     const restaurantId = req.user.restaurantId;
 
     return this.restaurantTablesService.addTableWithNextTableNum(restaurantId);
   }
 
-  @Delete('remove')
+  @Delete()
   async removeMaxTable(@Request() req): Promise<void> {
     const restaurantId = req.user.restaurantId;
 
