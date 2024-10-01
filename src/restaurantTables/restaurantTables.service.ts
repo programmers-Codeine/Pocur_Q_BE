@@ -17,7 +17,7 @@ export class RestaurantTablesService {
     private readonly urlsService: UrlsService,
   ) {}
 
-  async findTablesByRestaurantId(restaurantId: string): Promise<RestaurantTable[]> {
+  async getTables(restaurantId: string): Promise<RestaurantTable[]> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
@@ -29,7 +29,7 @@ export class RestaurantTablesService {
     });
   }
 
-  async addTableWithNextTableNum(restaurantId: string): Promise<RestaurantTable> {
+  async addTable(restaurantId: string): Promise<RestaurantTable> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
@@ -55,7 +55,7 @@ export class RestaurantTablesService {
     return savedTable;
   }
 
-  async removeTableWithMaxTableNum(restaurantId: string): Promise<void> {
+  async removeTable(restaurantId: string): Promise<void> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException(`Restaurant with ID ${restaurantId} not found`);
