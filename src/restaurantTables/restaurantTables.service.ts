@@ -52,6 +52,9 @@ export class RestaurantTablesService {
 
     await this.urlsService.createUrl(restaurant, newTableNum);
 
+    restaurant.totalTableCount += 1;
+    await this.restaurantRepository.save(restaurant);
+
     return savedTable;
   }
 
@@ -80,5 +83,8 @@ export class RestaurantTablesService {
     await this.urlsService.deleteUrlByTableNumAndRestaurantId(restaurantId, lastTable.table_num);
 
     await this.restaurantTableRepository.remove(lastTable);
+
+    restaurant.totalTableCount -= 1;
+    await this.restaurantRepository.save(restaurant);
   }
 }
