@@ -9,23 +9,23 @@ export class RestaurantTablesController {
   constructor(private readonly restaurantTablesService: RestaurantTablesService) {}
 
   @Get()
-  async getTablesByRestaurant(@Request() req): Promise<RestaurantTable[]> {
+  async getTables(@Request() req): Promise<RestaurantTable[]> {
     const restaurantId = req.user.restaurantId;
 
-    return this.restaurantTablesService.findTablesByRestaurantId(restaurantId);
+    return this.restaurantTablesService.getTables(restaurantId);
   }
 
-  @Post('add')
+  @Post()
   async addTable(@Request() req): Promise<RestaurantTable> {
     const restaurantId = req.user.restaurantId;
 
-    return this.restaurantTablesService.addTableWithNextTableNum(restaurantId);
+    return this.restaurantTablesService.addTable(restaurantId);
   }
 
-  @Delete('remove')
-  async removeMaxTable(@Request() req): Promise<void> {
+  @Delete()
+  async removeTable(@Request() req): Promise<void> {
     const restaurantId = req.user.restaurantId;
 
-    return this.restaurantTablesService.removeTableWithMaxTableNum(restaurantId);
+    return this.restaurantTablesService.removeTable(restaurantId);
   }
 }
