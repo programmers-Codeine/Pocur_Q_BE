@@ -14,10 +14,10 @@ export class Restaurant {
   @Expose()
   id: string;
 
-  @Column({ type: 'varchar', length: 45 })
+  @Column({ type: 'varchar', length: 45, name: 'user_id' })
   @IsString()
   @MaxLength(45)
-  @Expose({ name: 'user_id' })
+  @Expose({ name: 'userId' })
   userId: string;
 
   @Column({ type: 'varchar', length: 45 })
@@ -26,14 +26,14 @@ export class Restaurant {
   @Expose()
   name: string;
 
-  @Column({ type: 'int', default: null })
+  @Column({ type: 'int', default: null, name: 'default_table_count' })
   @IsInt()
-  @Expose({ name: 'default_table_count' })
+  @Expose({ name: 'defaultTableCount' })
   defaultTableCount: number;
 
-  @Column({ type: 'int', default: null })
+  @Column({ type: 'int', default: null, name: 'total_table_count' })
   @IsInt()
-  @Expose({ name: 'total_table_count' })
+  @Expose({ name: 'totalTableCount' })
   totalTableCount: number;
 
   @Column({ type: 'varchar', length: 45, nullable: true })
@@ -55,7 +55,7 @@ export class Restaurant {
   comment: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
-  @Expose({ name: 'created_at' })
+  @Expose({ name: 'createdAt' })
   createdAt: Date;
 
   @UpdateDateColumn({
@@ -63,7 +63,7 @@ export class Restaurant {
     default: () => 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
     name: 'updated_at',
   })
-  @Expose({ name: 'updated_at' })
+  @Expose({ name: 'updatedAt' })
   updatedAt: Date;
 
   @OneToMany(() => RestaurantTable, (table) => table.restaurant)
