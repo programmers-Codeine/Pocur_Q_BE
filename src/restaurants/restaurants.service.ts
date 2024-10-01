@@ -32,12 +32,12 @@ export class RestaurantsService {
     const newRestaurant = this.restaurantRepository.create({
       ...createRestaurantDto,
       userId,
-      totalTableCount: createRestaurantDto.default_table_count,
+      totalTableCount: createRestaurantDto.defaultTableCount,
     });
 
     const savedRestaurant = await this.restaurantRepository.save(newRestaurant);
 
-    const tableCount = createRestaurantDto.default_table_count;
+    const tableCount = createRestaurantDto.defaultTableCount;
     for (let i = 1; i <= tableCount; i++) {
       const newTable = this.restaurantTableRepository.create({
         restaurant: savedRestaurant,
