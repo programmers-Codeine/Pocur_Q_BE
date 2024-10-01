@@ -76,7 +76,7 @@ export class RestaurantTablesService {
       );
     }
 
-    await this.urlsService.deleteUrlByTableNumAndRestaurantId(restaurantId, lastTable.table_num);
+    await this.urlsService.deleteUrl(restaurantId, lastTable.table_num);
 
     await this.restaurantTableRepository.remove(lastTable);
 
