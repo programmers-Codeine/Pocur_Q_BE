@@ -39,6 +39,15 @@ export class Menu {
   @Column({ name: 'sold_out', default: false })
   soldOut: boolean;
 
+  @Column({ default: false })
+  hot: boolean;
+
+  @Column({ default: false })
+  new: boolean;
+
+  @Column({ name: 'is_running_out', default: false })
+  isRunningOut: boolean;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   created_at: Date;
 

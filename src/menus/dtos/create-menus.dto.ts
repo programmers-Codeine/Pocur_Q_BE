@@ -35,4 +35,13 @@ export class CreateMenuRequestDto {
 
   @IsBoolean()
   soldOut: boolean = false;
+
+  @IsBoolean()
+  hot: boolean = false;
+
+  @IsBoolean()
+  new: boolean = false;
+
+  @IsBoolean()
+  isRunningOut: boolean = false;
 }
