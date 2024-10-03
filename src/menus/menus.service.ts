@@ -16,7 +16,7 @@ export class MenusService {
   ) {}
 
   //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
-  async getAllMenus(restaurantId: string, categoryId?: string): Promise<Menu[]> {
+  async getAllMenus(restaurantId: string, categoryId?: string): Promise<any[]> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
 
     if (!restaurant) {
@@ -28,30 +28,67 @@ export class MenusService {
         restaurant: { id: restaurantId },
         ...(categoryId && { category: { id: categoryId } }),
       },
-      relations: ['options'],
+      relations: ['options', 'category'],
     });
 
     if (menus.length === 0) {
       throw new NotFoundException('해당 조건에 맞는 메뉴가 없습니다.');
     }
 
-    return menus;
+    // 응답 형식 변경
+    const response = menus.map((menu) => ({
+      id: menu.id,
+      categoryId: menu.category.id,
+      menuName: menu.menuName,
+      price: menu.price,
+      menuDetail: menu.menuDetail,
+      menuImg: menu.menuImg,
+      origin: menu.origin,
+      isActive: menu.isActive,
+      soldOut: menu.soldOut,
+      hot: menu.hot,
+      new: menu.new,
+      isRunningOut: menu.isRunningOut,
+      created_at: menu.created_at,
+      updated_at: menu.updated_at,
+      options: menu.options,
+    }));
+
+    return response;
   }
 
-  async getMenu(restaurantId: string, menuId: string): Promise<Menu> {
+  async getMenu(restaurantId: string, menuId: string): Promise<any> {
     const menu = await this.menuRepository.findOne({
       where: {
         id: menuId,
         restaurant: { id: restaurantId },
       },
-      relations: ['options'],
+      relations: ['options', 'category'], // category 관계도 포함
     });
 
     if (!menu) {
       throw new NotFoundException('메뉴를 찾을 수 없습니다.');
     }
 
-    return menu;
+    const response = {
+      id: menu.id,
+      categoryId: menu.category.id,
+      menuName: menu.menuName,
+      price: menu.price,
+      menuDetail: menu.menuDetail,
+      menuImg: menu.menuImg,
+      origin: menu.origin,
+      isActive: menu.isActive,
+      soldOut: menu.soldOut,
+      hot: menu.hot,
+      new: menu.new,
+      isRunningOut: menu.isRunningOut,
+      created_at: menu.created_at,
+      updated_at: menu.updated_at,
+      options: menu.options,
+    };
+
+    return response;
   }
 
   async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
