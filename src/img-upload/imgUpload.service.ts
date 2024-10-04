@@ -23,11 +23,12 @@ export class ImgUploadService {
           cb(null, `image/main/${Date.now().toString()}-${file.originalname}`);
         },
       }),
+      // 최대 파일 크기 제한: 5MB (5 * 1024 * 1024 바이트)
       limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png|gif/;
-        const mimetype = filetypes.test(file.mimetype);
-        const extname = filetypes.test(file.originalname.split('.').pop().toLowerCase());
+        const FILE_TYPE_REGEX = /jpeg|jpg|png|gif/;
+        const mimetype = FILE_TYPE_REGEX.test(file.mimetype);
+        const extname = FILE_TYPE_REGEX.test(file.originalname.split('.').pop().toLowerCase());
 
         if (mimetype && extname) {
           return cb(null, true);
