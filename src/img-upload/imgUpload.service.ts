@@ -28,7 +28,9 @@ export class ImgUploadService {
       fileFilter: (req, file, cb) => {
         const FILE_TYPE_REGEX = /jpeg|jpg|png|gif/;
         const mimetype = FILE_TYPE_REGEX.test(file.mimetype);
-        const extname = FILE_TYPE_REGEX.test(file.originalname.split('.').pop().toLowerCase());
+        const extname = FILE_TYPE_REGEX.test(
+          file.originalname.split('.')[file.originalname.split('.').length - 1].toLowerCase(),
+        );
 
         if (mimetype && extname) {
           return cb(null, true);
