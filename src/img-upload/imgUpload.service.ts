@@ -1,4 +1,4 @@
-import { Injectable, Req, Res } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import * as multer from 'multer';
 import * as multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3';
@@ -41,14 +41,14 @@ export class ImgUploadService {
     }).array('upload', 1);
   }
 
-  async fileupload(@Req() req, @Res() res) {
-    this.upload(req, res, (error) => {
-      if (error) {
-        console.error('Upload error:', error);
-        return res.status(404).json(`이미지 업로드에 실패했습니다: ${error.message}`);
-      }
-
-      res.status(201).json(req.files[0].location);
+  async fileupload(@Req() req) {
+    return new Promise((resolve, reject) => {
+      this.upload(req, null, (error) => {
+        if (error) {
+          return reject(new Error(`이미지 업로드에 실패했습니다: ${error.message}`));
+        }
+        resolve(req.files[0].location);
+      });
     });
   }
 }

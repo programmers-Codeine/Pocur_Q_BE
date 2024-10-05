@@ -1,4 +1,4 @@
-import { Controller, Post, Req, Res } from '@nestjs/common';
+import { Controller, Post, Req } from '@nestjs/common';
 import { ImgUploadService } from './imgUpload.service';
 
 @Controller('img-upload')
@@ -6,11 +6,21 @@ export class ImgUploadController {
   constructor(private readonly imgUploadService: ImgUploadService) {}
 
   @Post()
-  async create(@Req() request, @Res() response) {
+  async create(@Req() request) {
     try {
-      await this.imgUploadService.fileupload(request, response);
+      const imageUrl = await this.imgUploadService.fileupload(request);
+      return {
+        success: true,
+        message: '이미지 업로드 성공',
+        data: {
+          imageUrl,
+        },
+      };
     } catch (error) {
-      return response.status(500).json(`Failed to upload image file: ${error.message}`);
+      return {
+        success: false,
+        message: `이미지 업로드 실패: ${error.message}`,
+      };
     }
   }
 }
