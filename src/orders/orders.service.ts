@@ -41,7 +41,6 @@ export class OrdersService {
       throw new NotFoundException(`No orders found for restaurant_id ${restaurant_id} and table number ${table_num}`);
     }
 
-    // 필요한 정보만 추출하여 반환
     return orders.map((order) => ({
       id: order.id,
       table_num: order.restaurantTable.table_num,
@@ -62,7 +61,6 @@ export class OrdersService {
       throw new NotFoundException(`No orders found for restaurant with id ${restaurant_id}`);
     }
 
-    // 필요한 정보만 추출하여 반환
     return orders.map((order) => ({
       id: order.id,
       table_num: order.restaurantTable.table_num,
@@ -75,28 +73,23 @@ export class OrdersService {
   async createOrder(createOrderDto: CreateOrderDto, restaurant_id: string, restaurantTable_id: string): Promise<Order> {
     const { menu_id, count } = createOrderDto;
 
-    // 메뉴를 찾음
     const menu = await this.menusRepository.findOne({ where: { id: menu_id } });
     if (!menu) {
       throw new NotFoundException('Menu not found');
     }
 
-    // 레스토랑을 찾음
     const restaurant = await this.restaurantsRepository.findOne({ where: { id: restaurant_id } });
     if (!restaurant) {
       throw new NotFoundException('Restaurant not found');
     }
 
-    // 테이블을 찾음
     const restaurantTable = await this.restaurantTableRepository.findOne({ where: { id: restaurantTable_id } });
     if (!restaurantTable) {
       throw new NotFoundException('Restaurant Table not found');
     }
 
-    // 총 가격 계산 (메뉴 가격 * 수량)
     const total_price = menu.price * count;
 
-    // 주문 생성
     const order = this.ordersRepository.create({
       menu,
       count,
@@ -106,10 +99,8 @@ export class OrdersService {
       restaurantTable,
     });
 
-    // 주문을 DB에 저장
     const savedOrder = await this.ordersRepository.save(order);
 
-    // 주문 업데이트 정보를 클라이언트로 전송 (실시간)
     this.ordersGateway.sendOrderUpdate({
       id: savedOrder.id,
       table_num: restaurantTable.table_num,
