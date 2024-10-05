@@ -47,6 +47,11 @@ export class ImgUploadService {
         if (error) {
           return reject(new Error(`이미지 업로드에 실패했습니다: ${error.message}`));
         }
+
+        if (!req.files || req.files.length === 0) {
+          return reject(new Error('업로드할 파일이 없습니다.'));
+        }
+
         resolve(req.files[0].location);
       });
     });
