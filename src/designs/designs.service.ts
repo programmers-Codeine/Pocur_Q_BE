@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Design } from './entities/designs.entity';
+import { UpdateDesignDto } from './dto/update-designs.dto';
 
 @Injectable()
 export class DesignsService {
@@ -21,5 +22,16 @@ export class DesignsService {
     }
 
     return design;
+  }
+
+  async updateDesign(restaurantId: string, updateDesignDto: UpdateDesignDto): Promise<Design> {
+    const design = await this.getDesign(restaurantId);
+    if (!design) {
+      throw new NotFoundException(`레스토랑 ID가 ${restaurantId}인 디자인을 찾을 수 없습니다.`);
+    }
+
+    const updatedDesign = this.designsRepository.merge(design, updateDesignDto);
+
+    return await this.designsRepository.save(updatedDesign);
   }
 }
