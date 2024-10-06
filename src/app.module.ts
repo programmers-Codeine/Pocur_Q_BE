@@ -17,6 +17,7 @@ import { OrdersModule } from './orders/orders.module';
 import { OptionsController } from './options/options.controller';
 import { OptionsModule } from './options/options.module';
 import { CallsModule } from './calls/calls.module';
+import { ImgUploadModule } from './img-upload/imgUpload.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -48,6 +49,7 @@ dotenv.config();
     OrdersModule,
     OptionsModule,
     CallsModule,
+    ImgUploadModule,
   ],
   controllers: [
     UsersController,
