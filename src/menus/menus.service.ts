@@ -6,6 +6,7 @@ import { CreateMenuRequestDto } from './dtos/create-menus.dto';
 import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { GetAllMenusResponseDto } from './dtos/get-all-menus-response.dto';
+import { GetMenuResponseDto } from './dtos/get-menu-response.dto';
 
 @Injectable()
 export class MenusService {
@@ -58,7 +59,7 @@ export class MenusService {
     return response;
   }
 
-  async getMenu(restaurantId: string, menuId: string): Promise<GetAllMenusResponseDto> {
+  async getMenu(restaurantId: string, menuId: string): Promise<GetMenuResponseDto> {
     const menu = await this.menuRepository.findOne({
       where: {
         id: menuId,
@@ -71,7 +72,7 @@ export class MenusService {
       throw new NotFoundException('메뉴를 찾을 수 없습니다.');
     }
 
-    const response: GetAllMenusResponseDto = {
+    const response: GetMenuResponseDto = {
       id: menu.id,
       categoryId: menu.category.id,
       menuName: menu.menuName,

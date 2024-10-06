@@ -5,6 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateMenuRequestDto } from './dtos/create-menus.dto';
 import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
 import { GetAllMenusResponseDto } from './dtos/get-all-menus-response.dto';
+import { GetMenuResponseDto } from './dtos/get-menu-response.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('menus')
@@ -19,7 +20,7 @@ export class MenusController {
   }
 
   @Get(':menu_id')
-  async getMenu(@Request() req, @Param('menu_id') menuId: string): Promise<GetAllMenusResponseDto> {
+  async getMenu(@Request() req, @Param('menu_id') menuId: string): Promise<GetMenuResponseDto> {
     const restaurantId = req.user.restaurantId;
 
     return await this.menusService.getMenu(restaurantId, menuId);
