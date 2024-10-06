@@ -63,7 +63,7 @@ export class MenusService {
         id: menuId,
         restaurant: { id: restaurantId },
       },
-      relations: ['options', 'category'], // category 관계도 포함
+      relations: ['options', 'category'],
     });
 
     if (!menu) {
