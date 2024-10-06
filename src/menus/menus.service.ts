@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMenuRequestDto } from './dtos/create-menus.dto';
 import { UpdateMenuRequestDto } from './dtos/update-menus.dto';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+import { GetAllMenusResponseDto } from './dtos/get-all-menus-response.dto';
 
 @Injectable()
 export class MenusService {
@@ -16,7 +17,7 @@ export class MenusService {
   ) {}
 
   //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
-  async getAllMenus(restaurantId: string, categoryId?: string): Promise<any[]> {
+  async getAllMenus(restaurantId: string, categoryId?: string): Promise<GetAllMenusResponseDto[]> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
 
     if (!restaurant) {
@@ -36,7 +37,7 @@ export class MenusService {
     }
 
     // 응답 형식 변경
-    const response = menus.map((menu) => ({
+    const response: GetAllMenusResponseDto[] = menus.map((menu) => ({
       id: menu.id,
       categoryId: menu.category.id,
       menuName: menu.menuName,
@@ -57,7 +58,7 @@ export class MenusService {
     return response;
   }
 
-  async getMenu(restaurantId: string, menuId: string): Promise<any> {
+  async getMenu(restaurantId: string, menuId: string): Promise<GetAllMenusResponseDto> {
     const menu = await this.menuRepository.findOne({
       where: {
         id: menuId,
@@ -70,7 +71,7 @@ export class MenusService {
       throw new NotFoundException('메뉴를 찾을 수 없습니다.');
     }
 
-    const response = {
+    const response: GetAllMenusResponseDto = {
       id: menu.id,
       categoryId: menu.category.id,
       menuName: menu.menuName,
