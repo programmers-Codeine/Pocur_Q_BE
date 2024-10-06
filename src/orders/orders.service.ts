@@ -5,9 +5,6 @@ import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
-import { OrderSummaryDto } from './dto/order-summary.dto';
-import { OrderTableSummaryDto } from './dto/order-table-summary.dto';
 import { OrdersGateway } from './orders.gateway';
 
 @Injectable()
@@ -22,91 +19,72 @@ export class OrdersService {
     @InjectRepository(Restaurant)
     private restaurantsRepository: Repository<Restaurant>,
 
-    @InjectRepository(RestaurantTable)
-    private restaurantTableRepository: Repository<RestaurantTable>,
-
     private ordersGateway: OrdersGateway,
   ) {}
 
-  async findAllOrdersByRestaurantAndTable(restaurant_id: string, table_num: number): Promise<OrderTableSummaryDto[]> {
+  async getOrdersByTableNum(restaurantId: string, tableNum: number): Promise<Order[]> {
     const orders = await this.ordersRepository.find({
       where: {
-        restaurant: { id: restaurant_id },
-        restaurantTable: { table_num },
+        restaurant: { id: restaurantId },
+        table_num: tableNum,
       },
-      relations: ['menu', 'restaurantTable'],
+      relations: ['restaurant', 'menu'],
     });
 
     if (!orders.length) {
-      throw new NotFoundException(`No orders found for restaurant_id ${restaurant_id} and table number ${table_num}`);
+      throw new NotFoundException(`No orders found for restaurant ID ${restaurantId} and table number ${tableNum}`);
     }
 
-    return orders.map((order) => ({
-      id: order.id,
-      table_num: order.restaurantTable.table_num,
-      menu_name: order.menu.menuName,
-      price: order.menu.price,
-      count: order.count,
-      total_price: order.total_price,
-    }));
+    return orders;
   }
 
-  async findAllOrdersByRestaurant(restaurant_id: string): Promise<OrderSummaryDto[]> {
+  async getOrders(restaurantId: string): Promise<Order[]> {
     const orders = await this.ordersRepository.find({
-      where: { restaurant: { id: restaurant_id } },
-      relations: ['menu', 'restaurantTable'],
+      where: {
+        restaurant: { id: restaurantId },
+      },
+      relations: ['restaurant', 'menu'],
     });
 
     if (!orders.length) {
-      throw new NotFoundException(`No orders found for restaurant with id ${restaurant_id}`);
+      throw new NotFoundException(`No orders found for restaurant ID ${restaurantId}`);
     }
 
-    return orders.map((order) => ({
-      id: order.id,
-      table_num: order.restaurantTable.table_num,
-      menu_name: order.menu.menuName,
-      price: order.menu.price,
-      count: order.count,
-    }));
+    return orders;
   }
 
-  async createOrder(createOrderDto: CreateOrderDto, restaurant_id: string, restaurantTable_id: string): Promise<Order> {
-    const { menu_id, count } = createOrderDto;
+  async createOrder(createOrderDto: CreateOrderDto, restaurantId: string): Promise<Order> {
+    const { menuId, count, tableNum } = createOrderDto;
 
-    const menu = await this.menusRepository.findOne({ where: { id: menu_id } });
+    const menu = await this.menusRepository.findOne({ where: { id: menuId } });
     if (!menu) {
       throw new NotFoundException('Menu not found');
     }
 
-    const restaurant = await this.restaurantsRepository.findOne({ where: { id: restaurant_id } });
+    const restaurant = await this.restaurantsRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException('Restaurant not found');
     }
 
-    const restaurantTable = await this.restaurantTableRepository.findOne({ where: { id: restaurantTable_id } });
-    if (!restaurantTable) {
-      throw new NotFoundException('Restaurant Table not found');
-    }
-
-    const total_price = menu.price * count;
+    const totalPrice = menu.price * count;
 
     const order = this.ordersRepository.create({
       menu,
       count,
-      total_price,
+      total_price: totalPrice,
       ordered_at: new Date(),
       restaurant,
-      restaurantTable,
+      table_num: tableNum,
     });
 
     const savedOrder = await this.ordersRepository.save(order);
 
     this.ordersGateway.sendOrderUpdate({
       id: savedOrder.id,
-      table_num: restaurantTable.table_num,
+      table_num: savedOrder.table_num,
       menu_name: menu.menuName,
       count,
-      total_price,
+      total_price: totalPrice,
     });
 
     return savedOrder;
