@@ -6,10 +6,13 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { Menu } from 'src/menus/entities/menus.entity';
+import { Option } from 'src/options/entities/options.entity';
 
 @Entity('orders')
 export class Order {
@@ -50,4 +53,18 @@ export class Order {
   @JoinColumn({ name: 'menu_id' })
   @Expose()
   menu: Menu;
+
+  @ManyToMany(() => Option, { eager: true })
+  @JoinTable({
+    name: 'orderOptions',
+    joinColumn: {
+      name: 'order_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'option_id',
+      referencedColumnName: 'id',
+    },
+  })
+  options: Option[];
 }

@@ -1,4 +1,4 @@
-import { IsUUID, IsInt, IsNotEmpty } from 'class-validator';
+import { IsUUID, IsInt, IsNotEmpty, IsArray } from 'class-validator';
 
 export class CreateOrderDto {
   @IsUUID()
@@ -12,4 +12,9 @@ export class CreateOrderDto {
   @IsInt()
   @IsNotEmpty()
   tableNum: number;
+
+  @IsArray()
+  @IsUUID('all', { each: true })
+  @IsNotEmpty()
+  optionIds: string[];
 }

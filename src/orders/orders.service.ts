@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { OrdersGateway } from './orders.gateway';
+import { Option } from 'src/options/entities/options.entity';
 
 @Injectable()
 export class OrdersService {
@@ -18,6 +19,9 @@ export class OrdersService {
 
     @InjectRepository(Restaurant)
     private restaurantsRepository: Repository<Restaurant>,
+
+    @InjectRepository(Option)
+    private optionsRepository: Repository<Option>,
 
     private ordersGateway: OrdersGateway,
   ) {}
@@ -54,7 +58,7 @@ export class OrdersService {
   }
 
   async createOrder(createOrderDto: CreateOrderDto, restaurantId: string): Promise<Order> {
-    const { menuId, count, tableNum } = createOrderDto;
+    const { menuId, count, tableNum, optionIds } = createOrderDto;
 
     const menu = await this.menusRepository.findOne({ where: { id: menuId } });
     if (!menu) {
@@ -66,7 +70,17 @@ export class OrdersService {
       throw new NotFoundException('Restaurant not found');
     }
 
-    const totalPrice = menu.price * count;
+    const options = await this.optionsRepository.find({
+      where: {
+        id: In(optionIds),
+      },
+    });
+
+    if (!options.length) {
+      throw new NotFoundException('Options not found');
+    }
+
+    const totalPrice = menu.price * count + options.reduce((sum, option) => sum + option.optionPrice, 0);
 
     const order = this.ordersRepository.create({
       menu,
@@ -75,6 +89,7 @@ export class OrdersService {
       ordered_at: new Date(),
       restaurant,
       table_num: tableNum,
+      options,
     });
 
     const savedOrder = await this.ordersRepository.save(order);
