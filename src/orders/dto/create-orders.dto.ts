@@ -3,9 +3,13 @@ import { IsUUID, IsInt, IsNotEmpty } from 'class-validator';
 export class CreateOrderDto {
   @IsUUID()
   @IsNotEmpty()
-  menu_id: string;
+  menuId: string;
 
   @IsInt()
   @IsNotEmpty()
   count: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  tableNum: number;
 }
