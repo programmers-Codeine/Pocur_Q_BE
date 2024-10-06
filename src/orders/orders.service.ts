@@ -36,7 +36,9 @@ export class OrdersService {
     });
 
     if (!orders.length) {
-      throw new NotFoundException(`No orders found for restaurant ID ${restaurantId} and table number ${tableNum}`);
+      throw new NotFoundException(
+        `레스토랑 ID ${restaurantId} 및 테이블 번호 ${tableNum}에 대한 주문이 존재하지 않습니다.`,
+      );
     }
 
     return orders;
@@ -51,7 +53,7 @@ export class OrdersService {
     });
 
     if (!orders.length) {
-      throw new NotFoundException(`No orders found for restaurant ID ${restaurantId}`);
+      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 대한 주문이 존재하지 않습니다.`);
     }
 
     return orders;
@@ -62,22 +64,25 @@ export class OrdersService {
 
     const menu = await this.menusRepository.findOne({ where: { id: menuId } });
     if (!menu) {
-      throw new NotFoundException('Menu not found');
+      throw new NotFoundException('해당 메뉴를 찾을 수 없습니다.');
     }
 
     const restaurant = await this.restaurantsRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
-      throw new NotFoundException('Restaurant not found');
+      throw new NotFoundException('해당 레스토랑을 찾을 수 없습니다.');
     }
 
-    const options = await this.optionsRepository.find({
-      where: {
-        id: In(optionIds),
-      },
-    });
+    let options = [];
+    if (optionIds && optionIds.length > 0) {
+      options = await this.optionsRepository.find({
+        where: {
+          id: In(optionIds),
+        },
+      });
 
-    if (!options.length) {
-      throw new NotFoundException('Options not found');
+      if (options.length !== optionIds.length) {
+        throw new NotFoundException('일부 옵션을 찾을 수 없습니다.');
+      }
     }
 
     const totalPrice = menu.price * count + options.reduce((sum, option) => sum + option.optionPrice, 0);
