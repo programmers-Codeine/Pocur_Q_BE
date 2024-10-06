@@ -9,7 +9,6 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Expose } from 'class-transformer';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Option } from 'src/options/entities/options.entity';
@@ -17,41 +16,32 @@ import { Option } from 'src/options/entities/options.entity';
 @Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn('uuid')
-  @Expose()
   id: string;
 
-  @Column({ type: 'int', nullable: true })
-  @Expose({ name: 'tableNum' })
-  table_num: number;
+  @Column({ type: 'int', nullable: true, name: 'table_num' })
+  tableNum: number;
 
-  @Column({ type: 'timestamp', nullable: true })
-  @Expose({ name: 'orderedAt' })
-  ordered_at: Date;
+  @Column({ type: 'timestamp', nullable: true, name: 'ordered_at' })
+  orderedAt: Date;
 
   @Column({ type: 'int', nullable: true })
-  @Expose()
   count: number;
 
-  @Column({ type: 'int', nullable: true })
-  @Expose({ name: 'totalPrice' })
-  total_price: number;
+  @Column({ type: 'int', nullable: true, name: 'total_price' })
+  totalPrice: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  @Expose({ name: 'createdAt' })
-  created_at: Date;
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  @Expose({ name: 'updatedAt' })
-  updated_at: Date;
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
 
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.orders)
   @JoinColumn({ name: 'restaurant_id' })
-  @Expose()
   restaurant: Restaurant;
 
   @ManyToOne(() => Menu, (menu) => menu.orders)
   @JoinColumn({ name: 'menu_id' })
-  @Expose()
   menu: Menu;
 
   @ManyToMany(() => Option, { eager: true })
@@ -66,5 +56,5 @@ export class Order {
       referencedColumnName: 'id',
     },
   })
-  options: Option[];
+  options?: Option[];
 }

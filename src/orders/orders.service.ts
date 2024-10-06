@@ -30,9 +30,9 @@ export class OrdersService {
     const orders = await this.ordersRepository.find({
       where: {
         restaurant: { id: restaurantId },
-        table_num: tableNum,
+        tableNum,
       },
-      relations: ['restaurant', 'menu'],
+      relations: ['restaurant', 'menu', 'options'],
     });
 
     if (!orders.length) {
@@ -49,7 +49,7 @@ export class OrdersService {
       where: {
         restaurant: { id: restaurantId },
       },
-      relations: ['restaurant', 'menu'],
+      relations: ['restaurant', 'menu', 'options'],
     });
 
     if (!orders.length) {
@@ -90,10 +90,10 @@ export class OrdersService {
     const order = this.ordersRepository.create({
       menu,
       count,
-      total_price: totalPrice,
-      ordered_at: new Date(),
+      totalPrice,
+      orderedAt: new Date(),
       restaurant,
-      table_num: tableNum,
+      tableNum,
       options,
     });
 
@@ -101,10 +101,10 @@ export class OrdersService {
 
     this.ordersGateway.sendOrderUpdate({
       id: savedOrder.id,
-      table_num: savedOrder.table_num,
-      menu_name: menu.menuName,
+      tableNum: savedOrder.tableNum,
+      menuName: menu.menuName,
       count,
-      total_price: totalPrice,
+      totalPrice,
     });
 
     return savedOrder;
