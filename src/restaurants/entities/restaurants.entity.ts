@@ -7,6 +7,7 @@ import { Order } from 'src/orders/entities/orders.entity';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Category } from 'src/categories/entities/categories.entity';
 import { Call } from 'src/calls/entities/calls.entity';
+import { Design } from 'src/designs/entities/designs.entity';
 
 @Entity('restaurants')
 export class Restaurant {
@@ -89,4 +90,7 @@ export class Restaurant {
   @OneToMany(() => Call, (call) => call.restaurant)
   @Expose()
   call: Call[];
+
+  @OneToMany(() => Design, (design) => design.restaurant)
+  designs: Design[];
 }

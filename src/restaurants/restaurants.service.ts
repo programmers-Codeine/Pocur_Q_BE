@@ -6,6 +6,7 @@ import { CreateRestaurantDto } from './dto/create-restaurants.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurants.dto';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { UrlsService } from 'src/urls/urls.service';
+import { Design } from 'src/designs/entities/designs.entity';
 
 @Injectable()
 export class RestaurantsService {
@@ -15,6 +16,9 @@ export class RestaurantsService {
 
     @InjectRepository(RestaurantTable)
     private readonly restaurantTableRepository: Repository<RestaurantTable>,
+
+    @InjectRepository(Design)
+    private readonly designRepository: Repository<Design>,
 
     private readonly urlsService: UrlsService,
   ) {}
@@ -47,6 +51,11 @@ export class RestaurantsService {
 
       await this.urlsService.createUrl(savedRestaurant, i);
     }
+
+    const newDesign = this.designRepository.create({
+      restaurant: savedRestaurant,
+    });
+    await this.designRepository.save(newDesign);
 
     return savedRestaurant;
   }
