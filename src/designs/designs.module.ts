@@ -9,6 +9,6 @@ import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
   imports: [TypeOrmModule.forFeature([Design, Restaurant])],
   controllers: [DesignsController],
   providers: [DesignsService],
-  exports: [DesignsService],
+  exports: [DesignsService, TypeOrmModule],
 })
 export class DesignsModule {}

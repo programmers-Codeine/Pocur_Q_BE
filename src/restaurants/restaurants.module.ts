@@ -7,9 +7,10 @@ import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.
 import { Url } from 'src/urls/entities/urls.entity';
 import { UrlsService } from 'src/urls/urls.service';
 import { Order } from 'src/orders/entities/orders.entity';
+import { DesignsModule } from 'src/designs/designs.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url, Order])],
+  imports: [TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url, Order]), DesignsModule],
   controllers: [RestaurantsController],
   providers: [RestaurantsService, UrlsService],
   exports: [RestaurantsService, RestaurantsModule],
