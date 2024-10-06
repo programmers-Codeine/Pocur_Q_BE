@@ -27,10 +27,6 @@ export class RestaurantTable {
   @Expose({ name: 'tableNum' })
   table_num: number;
 
-  @OneToMany(() => Order, (order) => order.restaurantTable)
-  @Expose()
-  orders: Order[];
-
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   @Expose({ name: 'createdAt' })
   created_at: Date;

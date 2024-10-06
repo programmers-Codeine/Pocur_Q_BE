@@ -4,12 +4,12 @@ import { OrdersService } from './orders.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/orders.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { Menu } from 'src/menus/entities/menus.entity';
 import OrdersGateway from './orders.gateway';
+import { Option } from 'src/options/entities/options.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order, Restaurant, RestaurantTable, Menu])],
+  imports: [TypeOrmModule.forFeature([Order, Restaurant, Menu, Option])],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersGateway],
   exports: [OrdersService],

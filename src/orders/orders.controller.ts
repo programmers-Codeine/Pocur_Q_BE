@@ -2,8 +2,6 @@ import { Controller, Post, Body, Param, Get, Request, UseGuards } from '@nestjs/
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Order } from './entities/orders.entity';
-import { OrderSummaryDto } from './dto/order-summary.dto';
-import { OrderTableSummaryDto } from './dto/order-table-summary.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -12,30 +10,23 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get('table/:table_num')
-  async findAllOrdersByRestaurantAndTable(
-    @Request() req,
-    @Param('table_num') table_num: number,
-  ): Promise<OrderTableSummaryDto[]> {
-    const restaurant_id = req.user.restaurantId;
+  async getOrdersByTableNum(@Request() req, @Param('table_num') tableNum: number): Promise<Order[]> {
+    const restaurantId = req.user.restaurantId;
 
-    return this.ordersService.findAllOrdersByRestaurantAndTable(restaurant_id, table_num);
+    return this.ordersService.getOrdersByTableNum(restaurantId, tableNum);
   }
 
   @Get()
-  async findAllOrdersByRestaurant(@Request() req): Promise<OrderSummaryDto[]> {
-    const restaurant_id = req.user.restaurantId;
+  async getOrders(@Request() req): Promise<Order[]> {
+    const restaurantId = req.user.restaurantId;
 
-    return this.ordersService.findAllOrdersByRestaurant(restaurant_id);
+    return this.ordersService.getOrders(restaurantId);
   }
 
-  @Post(':restaurantTable_id')
-  async createOrder(
-    @Request() req,
-    @Param('restaurantTable_id') restaurantTable_id: string,
-    @Body() createOrderDto: CreateOrderDto,
-  ): Promise<Order> {
-    const restaurant_id = req.user.restaurantId;
+  @Post()
+  async createOrder(@Request() req, @Body() createOrderDto: CreateOrderDto): Promise<Order> {
+    const restaurantId = req.user.restaurantId;
 
-    return this.ordersService.createOrder(createOrderDto, restaurant_id, restaurantTable_id);
+    return this.ordersService.createOrder(createOrderDto, restaurantId);
   }
 }

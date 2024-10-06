@@ -7,7 +7,7 @@ export class OrdersGateway {
   server: Server;
 
   sendOrderUpdate(orderData: any) {
-    this.server.emit('orderUpdate', orderData); // 클라이언트에게 주문 업데이트 전송
+    this.server.emit('orderUpdate', orderData);
   }
 }
 
