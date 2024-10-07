@@ -17,6 +17,7 @@ import { Category } from 'src/categories/entities/categories.entity';
 import { Call } from 'src/calls/entities/calls.entity';
 import { Design } from 'src/designs/entities/designs.entity';
 import { Users } from 'src/users/entities/users.entity';
+import { DesignPreset } from 'src/designPresets/entities/designPresets.entity';
 
 @Entity('restaurants')
 export class Restaurant {
@@ -75,4 +76,7 @@ export class Restaurant {
 
   @OneToMany(() => Design, (design) => design.restaurant)
   designs: Design[];
+
+  @OneToMany(() => DesignPreset, (designPreset) => designPreset.restaurant)
+  designPresets: DesignPreset[];
 }
