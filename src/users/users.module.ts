@@ -11,9 +11,13 @@ import { AuthModule } from 'src/auth/auth.module';
 dotenv.config();
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users, Restaurant]), RestaurantsModule, forwardRef(() => AuthModule)],
+  imports: [
+    TypeOrmModule.forFeature([Users, Restaurant]),
+    forwardRef(() => RestaurantsModule),
+    forwardRef(() => AuthModule),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
-  exports: [UsersService],
+  exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}
