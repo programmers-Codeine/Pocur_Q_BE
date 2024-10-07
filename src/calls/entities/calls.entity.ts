@@ -9,7 +9,7 @@ export class Call {
   @Column({ name: 'call_name', type: 'varchar', length: 45 })
   callName: string;
 
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.call, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.calls, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'restaurant_id' })
   restaurant: Restaurant;
 }

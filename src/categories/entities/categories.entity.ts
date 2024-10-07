@@ -31,7 +31,7 @@ export class Category {
   @OneToMany(() => Menu, (menu) => menu.category, { onDelete: 'CASCADE' })
   menus: Menu[];
 
-  @ManyToOne(() => Restaurant, (restaurant) => restaurant.category, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Restaurant, (restaurant) => restaurant.categories, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'restaurant_id' })
   restaurant: Restaurant;
 }
