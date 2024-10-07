@@ -7,6 +7,7 @@ import { UpdateRestaurantDto } from './dto/update-restaurants.dto';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { UrlsService } from 'src/urls/urls.service';
 import { Design } from 'src/designs/entities/designs.entity';
+import { Users } from 'src/users/entities/users.entity';
 
 @Injectable()
 export class RestaurantsService {
@@ -19,6 +20,9 @@ export class RestaurantsService {
 
     @InjectRepository(Design)
     private readonly designRepository: Repository<Design>,
+
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>,
 
     private readonly urlsService: UrlsService,
   ) {}
@@ -33,9 +37,14 @@ export class RestaurantsService {
   }
 
   async createRestaurant(userId: string, createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`ID가 ${userId}인 사용자를 찾을 수 없습니다.`);
+    }
+
     const newRestaurant = this.restaurantRepository.create({
       ...createRestaurantDto,
-      userId,
+      user,
       totalTableCount: createRestaurantDto.defaultTableCount,
     });
 

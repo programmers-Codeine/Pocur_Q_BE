@@ -52,7 +52,7 @@ export class UsersService {
     }
 
     // restaurants 테이블에서 해당 유저가 있는지 확인
-    const isUserInRestaurants = await this.restaurantRepository.findOne({ where: { userId: user.id } });
+    const isUserInRestaurants = await this.restaurantRepository.findOne({ where: { user: { id: user.id } } });
 
     // user가 없으면 처음 로그인한 것으로 간주
     const isFirstLogin = !isUserInRestaurants;
