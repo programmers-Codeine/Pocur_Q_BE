@@ -15,6 +15,19 @@ export class DesignsService {
     private readonly designPresetRepository: Repository<DesignPreset>,
   ) {}
 
+  async getDesign(restaurantId: string): Promise<Design> {
+    const design = await this.designsRepository.findOne({
+      where: { restaurant: { id: restaurantId } },
+      relations: ['restaurant', 'designPreset'],
+    });
+
+    if (!design) {
+      throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑에 대한 현재 적용된 디자인을 찾을 수 없습니다.`);
+    }
+
+    return design;
+  }
+
   async updateDesign(designId: string, restaurantId: string, updateDesignDto: UpdateDesignDto): Promise<Design> {
     const design = await this.designsRepository.findOne({
       where: { id: designId },
