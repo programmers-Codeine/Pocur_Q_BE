@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { IsString, IsInt, MaxLength } from 'class-validator';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { Url } from 'src/urls/entities/urls.entity';
@@ -7,14 +16,16 @@ import { Menu } from 'src/menus/entities/menus.entity';
 import { Category } from 'src/categories/entities/categories.entity';
 import { Call } from 'src/calls/entities/calls.entity';
 import { Design } from 'src/designs/entities/designs.entity';
+import { Users } from 'src/users/entities/users.entity';
 
 @Entity('restaurants')
 export class Restaurant {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 45, name: 'user_id' })
-  userId: string;
+  @ManyToOne(() => Users, (user) => user.restaurants, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: Users;
 
   @Column({ type: 'varchar', length: 45 })
   name: string;
