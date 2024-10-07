@@ -1,14 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
-import { OrderSummaryDto } from './dto/order-summary.dto';
-import { OrderTableSummaryDto } from './dto/order-table-summary.dto';
 import { OrdersGateway } from './orders.gateway';
+import { Option } from 'src/options/entities/options.entity';
 
 @Injectable()
 export class OrdersService {
@@ -22,100 +20,91 @@ export class OrdersService {
     @InjectRepository(Restaurant)
     private restaurantsRepository: Repository<Restaurant>,
 
-    @InjectRepository(RestaurantTable)
-    private restaurantTableRepository: Repository<RestaurantTable>,
+    @InjectRepository(Option)
+    private optionsRepository: Repository<Option>,
 
     private ordersGateway: OrdersGateway,
   ) {}
 
-  async findAllOrdersByRestaurantAndTable(restaurant_id: string, table_num: number): Promise<OrderTableSummaryDto[]> {
+  async getOrdersByTableNum(restaurantId: string, tableNum: number): Promise<Order[]> {
     const orders = await this.ordersRepository.find({
       where: {
-        restaurant: { id: restaurant_id },
-        restaurantTable: { table_num },
+        restaurant: { id: restaurantId },
+        tableNum,
       },
-      relations: ['menu', 'restaurantTable'],
+      relations: ['restaurant', 'menu', 'options'],
     });
 
     if (!orders.length) {
-      throw new NotFoundException(`No orders found for restaurant_id ${restaurant_id} and table number ${table_num}`);
+      throw new NotFoundException(
+        `레스토랑 ID ${restaurantId} 및 테이블 번호 ${tableNum}에 대한 주문이 존재하지 않습니다.`,
+      );
     }
 
-    // 필요한 정보만 추출하여 반환
-    return orders.map((order) => ({
-      id: order.id,
-      table_num: order.restaurantTable.table_num,
-      menu_name: order.menu.menuName,
-      price: order.menu.price,
-      count: order.count,
-      total_price: order.total_price,
-    }));
+    return orders;
   }
 
-  async findAllOrdersByRestaurant(restaurant_id: string): Promise<OrderSummaryDto[]> {
+  async getOrders(restaurantId: string): Promise<Order[]> {
     const orders = await this.ordersRepository.find({
-      where: { restaurant: { id: restaurant_id } },
-      relations: ['menu', 'restaurantTable'],
+      where: {
+        restaurant: { id: restaurantId },
+      },
+      relations: ['restaurant', 'menu', 'options'],
     });
 
     if (!orders.length) {
-      throw new NotFoundException(`No orders found for restaurant with id ${restaurant_id}`);
+      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 대한 주문이 존재하지 않습니다.`);
     }
 
-    // 필요한 정보만 추출하여 반환
-    return orders.map((order) => ({
-      id: order.id,
-      table_num: order.restaurantTable.table_num,
-      menu_name: order.menu.menuName,
-      price: order.menu.price,
-      count: order.count,
-    }));
+    return orders;
   }
 
-  async createOrder(createOrderDto: CreateOrderDto, restaurant_id: string, restaurantTable_id: string): Promise<Order> {
-    const { menu_id, count } = createOrderDto;
+  async createOrder(createOrderDto: CreateOrderDto, restaurantId: string): Promise<Order> {
+    const { menuId, count, tableNum, optionIds } = createOrderDto;
 
-    // 메뉴를 찾음
-    const menu = await this.menusRepository.findOne({ where: { id: menu_id } });
+    const menu = await this.menusRepository.findOne({ where: { id: menuId } });
     if (!menu) {
-      throw new NotFoundException('Menu not found');
+      throw new NotFoundException('해당 메뉴를 찾을 수 없습니다.');
     }
 
-    // 레스토랑을 찾음
-    const restaurant = await this.restaurantsRepository.findOne({ where: { id: restaurant_id } });
+    const restaurant = await this.restaurantsRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
-      throw new NotFoundException('Restaurant not found');
+      throw new NotFoundException('해당 레스토랑을 찾을 수 없습니다.');
     }
 
-    // 테이블을 찾음
-    const restaurantTable = await this.restaurantTableRepository.findOne({ where: { id: restaurantTable_id } });
-    if (!restaurantTable) {
-      throw new NotFoundException('Restaurant Table not found');
+    let options = [];
+    if (optionIds && optionIds.length > 0) {
+      options = await this.optionsRepository.find({
+        where: {
+          id: In(optionIds),
+        },
+      });
+
+      if (options.length !== optionIds.length) {
+        throw new NotFoundException('일부 옵션을 찾을 수 없습니다.');
+      }
     }
 
-    // 총 가격 계산 (메뉴 가격 * 수량)
-    const total_price = menu.price * count;
+    const totalPrice = menu.price * count + options.reduce((sum, option) => sum + option.optionPrice, 0);
 
-    // 주문 생성
     const order = this.ordersRepository.create({
       menu,
       count,
-      total_price,
-      ordered_at: new Date(),
+      totalPrice,
+      orderedAt: new Date(),
       restaurant,
-      restaurantTable,
+      tableNum,
+      options,
     });
 
-    // 주문을 DB에 저장
     const savedOrder = await this.ordersRepository.save(order);
 
-    // 주문 업데이트 정보를 클라이언트로 전송 (실시간)
     this.ordersGateway.sendOrderUpdate({
       id: savedOrder.id,
-      table_num: restaurantTable.table_num,
-      menu_name: menu.menuName,
+      tableNum: savedOrder.tableNum,
+      menuName: menu.menuName,
       count,
-      total_price,
+      totalPrice,
     });
 
     return savedOrder;

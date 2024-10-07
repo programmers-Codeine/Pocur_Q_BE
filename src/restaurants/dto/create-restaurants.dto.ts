@@ -1,9 +1,24 @@
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsOptional, MaxLength } from 'class-validator';
 
 export class CreateRestaurantDto {
   @IsString()
   name: string;
 
   @IsInt()
-  default_table_count: number;
+  defaultTableCount: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  logo?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  introduce?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(45)
+  comment?: string;
 }

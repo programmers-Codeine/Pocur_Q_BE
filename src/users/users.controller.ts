@@ -23,6 +23,7 @@ export class UsersController {
     request.res.cookie('accessToken', accessToken, {
       maxAge: 1000 * 60 * 60, // 1시간
       httpOnly: true,
+      sameSite: 'none',
       secure: process.env.NODE_ENV === 'production',
     });
 
