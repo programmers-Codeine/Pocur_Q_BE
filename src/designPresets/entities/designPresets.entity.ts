@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+import { Design } from 'src/designs/entities/designs.entity';
 
 @Entity('designPresets')
 export class DesignPreset {
@@ -57,4 +58,7 @@ export class DesignPreset {
   @ManyToOne(() => Restaurant, (restaurant) => restaurant.designPresets, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'restaurant_id' })
   restaurant: Restaurant;
+
+  @OneToMany(() => Design, (design) => design.designPreset)
+  designs: Design[];
 }

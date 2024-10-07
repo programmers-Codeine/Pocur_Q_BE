@@ -9,10 +9,11 @@ import { UrlsService } from 'src/urls/urls.service';
 import { Order } from 'src/orders/entities/orders.entity';
 import { UsersModule } from 'src/users/users.module';
 import { DesignPresetsModule } from 'src/designPresets/designPresets.module';
+import { Design } from 'src/designs/entities/designs.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url, Order]),
+    TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url, Order, Design]),
     DesignPresetsModule,
     forwardRef(() => UsersModule),
   ],
