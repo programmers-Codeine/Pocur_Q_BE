@@ -25,10 +25,10 @@ export class Restaurant {
   @Column({ type: 'int', default: null, name: 'total_table_count' })
   totalTableCount: number;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   logo: string;
 
-  @Column({ type: 'varchar', length: 45, nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   introduce: string;
 
   @Column({ type: 'varchar', length: 45, nullable: true })
