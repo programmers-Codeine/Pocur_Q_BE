@@ -8,6 +8,7 @@ import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.
 import { UrlsService } from 'src/urls/urls.service';
 import { Users } from 'src/users/entities/users.entity';
 import { DesignPreset } from 'src/designPresets/entities/designPresets.entity';
+import { Design } from 'src/designs/entities/designs.entity';
 
 @Injectable()
 export class RestaurantsService {
@@ -23,6 +24,9 @@ export class RestaurantsService {
 
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
+
+    @InjectRepository(Design)
+    private readonly designRepository: Repository<Design>,
 
     private readonly urlsService: UrlsService,
   ) {}
@@ -65,7 +69,13 @@ export class RestaurantsService {
       restaurant: savedRestaurant,
       name: '기본 디자인',
     });
-    await this.designPresetRepository.save(newDesignPreset);
+    const savedDesignPreset = await this.designPresetRepository.save(newDesignPreset);
+
+    const newDesign = this.designRepository.create({
+      restaurant: savedRestaurant,
+      designPreset: savedDesignPreset,
+    });
+    await this.designRepository.save(newDesign);
 
     return savedRestaurant;
   }
