@@ -1,4 +1,4 @@
-import { IsUUID, IsInt, IsNotEmpty, IsArray } from 'class-validator';
+import { IsUUID, IsInt, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
 
 export class CreateOrderDto {
   @IsUUID()
@@ -15,6 +15,6 @@ export class CreateOrderDto {
 
   @IsArray()
   @IsUUID('all', { each: true })
-  @IsNotEmpty()
+  @IsOptional()
   optionIds: string[];
 }
