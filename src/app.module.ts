@@ -19,6 +19,7 @@ import { OptionsModule } from './options/options.module';
 import { CallsModule } from './calls/calls.module';
 import { ImgUploadModule } from './img-upload/imgUpload.module';
 import { DesignsModule } from './designs/designs.module';
+import { DesignPresetsModule } from './designPresets/designPresets.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -52,6 +53,7 @@ dotenv.config();
     CallsModule,
     ImgUploadModule,
     DesignsModule,
+    DesignPresetsModule,
   ],
   controllers: [
     UsersController,

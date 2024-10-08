@@ -7,13 +7,14 @@ import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.
 import { Url } from 'src/urls/entities/urls.entity';
 import { UrlsService } from 'src/urls/urls.service';
 import { Order } from 'src/orders/entities/orders.entity';
-import { DesignsModule } from 'src/designs/designs.module';
 import { UsersModule } from 'src/users/users.module';
+import { DesignPresetsModule } from 'src/designPresets/designPresets.module';
+import { Design } from 'src/designs/entities/designs.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url, Order]),
-    DesignsModule,
+    TypeOrmModule.forFeature([Restaurant, RestaurantTable, Url, Order, Design]),
+    DesignPresetsModule,
     forwardRef(() => UsersModule),
   ],
   controllers: [RestaurantsController],
