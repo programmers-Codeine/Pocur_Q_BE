@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryRequestDto } from './dtos/create-categories.dto';
 import { UpdateCategoryRequestDto } from './dtos/update-categories.dto';
 
-//Todo: 추후 user와 restaurant 매칭 맞는지 확인하는 로직 추가 필요
 @Injectable()
 export class CategoriesService {
   constructor(
