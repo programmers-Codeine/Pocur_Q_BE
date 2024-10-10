@@ -60,6 +60,7 @@ export class UsersService {
       sub: user.id,
       nickname: user.nickname,
       restaurantId: isUserInRestaurants ? isUserInRestaurants.id : null,
+      type: 'login',
     };
     const accessToken = this.jwtService.sign(payload);
 
