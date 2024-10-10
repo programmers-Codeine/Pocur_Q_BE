@@ -58,29 +58,32 @@ export class RestaurantTablesService {
     return savedTable;
   }
 
-  async removeTable(restaurantId: string): Promise<void> {
+  async deleteTable(restaurantId: string, tableNum: number): Promise<void> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
     if (!restaurant) {
       throw new NotFoundException(`ID가 ${restaurantId}인 레스토랑을 찾을 수 없습니다.`);
     }
 
-    const lastTable = await this.restaurantTableRepository
-      .createQueryBuilder('table')
-      .where('table.restaurant_id = :restaurantId', { restaurantId })
-      .orderBy('table.table_num', 'DESC')
-      .getOne();
+    const table = await this.restaurantTableRepository.findOne({
+      where: { restaurant: { id: restaurantId }, table_num: tableNum },
+    });
 
-    if (lastTable.table_num <= restaurant.defaultTableCount) {
+    if (!table) {
+      throw new NotFoundException(`테이블 번호 ${tableNum}을 찾을 수 없습니다.`);
+    }
+
+    if (tableNum <= restaurant.defaultTableCount) {
       throw new BadRequestException(
-        `기본 테이블은 삭제 할 수 없습니다. 기본 테이블 수 : (${restaurant.defaultTableCount})`,
+        `기본 테이블은 삭제할 수 없습니다. 기본 테이블 수 : (${restaurant.defaultTableCount})`,
       );
     }
 
-    await this.urlsService.deleteUrl(restaurantId, lastTable.table_num);
+    await this.urlsService.deleteUrl(restaurantId, tableNum);
 
-    await this.restaurantTableRepository.remove(lastTable);
+    await this.restaurantTableRepository.remove(table);
 
     restaurant.totalTableCount -= 1;
+
     await this.restaurantRepository.save(restaurant);
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, Request, UseGuards, Delete } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Order } from './entities/orders.entity';
@@ -28,5 +28,19 @@ export class OrdersController {
     const restaurantId = req.user.restaurantId;
 
     return this.ordersService.createOrder(createOrderDto, restaurantId);
+  }
+
+  @Delete(':order_id')
+  async deleteOrder(@Request() req, @Param('order_id') orderId: string): Promise<void> {
+    const restaurantId = req.user.restaurantId;
+
+    return this.ordersService.deleteOrder(orderId, restaurantId);
+  }
+
+  @Delete('table/:table_num')
+  async deleteOrdersByTableNum(@Request() req, @Param('table_num') tableNum: number): Promise<void> {
+    const restaurantId = req.user.restaurantId;
+
+    return this.ordersService.deleteOrdersByTableNum(restaurantId, tableNum);
   }
 }
