@@ -23,9 +23,9 @@ export class RestaurantTablesController {
   }
 
   @Delete()
-  async removeTable(@Request() req): Promise<void> {
+  async deleteTable(@Request() req): Promise<void> {
     const restaurantId = req.user.restaurantId;
 
-    return this.restaurantTablesService.removeTable(restaurantId);
+    return this.restaurantTablesService.deleteTable(restaurantId);
   }
 }
