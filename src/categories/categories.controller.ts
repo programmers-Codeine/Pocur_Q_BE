@@ -37,10 +37,10 @@ export class CategoriesController {
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
-  @Put(':category_id')
+  @Put(':categoryId')
   async updateCategory(
     @Request() req,
-    @Param('category_id') categoryId: string,
+    @Param('categoryId') categoryId: string,
     @Body() updateCategoryRequestDto: UpdateCategoryRequestDto,
   ): Promise<Category> {
     if (req.user.type === 'login') {
@@ -50,8 +50,8 @@ export class CategoriesController {
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
-  @Delete(':category_id')
-  async deleteCategory(@Request() req, @Param('category_id') categoryId: string): Promise<void> {
+  @Delete(':categoryId')
+  async deleteCategory(@Request() req, @Param('categoryId') categoryId: string): Promise<void> {
     if (req.user.type === 'login') {
       const restaurantId = req.user.restaurantId;
       return await this.categoriesService.deleteCategory(restaurantId, categoryId);
