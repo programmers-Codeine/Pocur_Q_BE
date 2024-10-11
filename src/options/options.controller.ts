@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { OptionsService } from './options.service';
 import { Option } from './entities/options.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -13,7 +13,11 @@ export class OptionsController {
   async createOptions(
     @Param('menu_id') menuId: string,
     @Body() createOptionsRequestDto: CreateOptionRequestDto[],
+    @Request() req,
   ): Promise<Option[]> {
-    return await this.optionsService.createOptions(menuId, createOptionsRequestDto);
+    if (req.user.type === 'login') {
+      return await this.optionsService.createOptions(menuId, createOptionsRequestDto);
+    }
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 }
