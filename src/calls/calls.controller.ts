@@ -37,10 +37,10 @@ export class CallsController {
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
-  @Put(':call_id')
+  @Put(':callId')
   async updateCall(
     @Request() req,
-    @Param('call_id') callId: string,
+    @Param('callId') callId: string,
     @Body() updateCallRequestDto: UpdateCallRequestDto,
   ): Promise<Call> {
     if (req.user.type === 'login') {
@@ -50,8 +50,8 @@ export class CallsController {
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
-  @Delete(':call_id')
-  async deleteCall(@Request() req, @Param('call_id') callId: string): Promise<void> {
+  @Delete(':callId')
+  async deleteCall(@Request() req, @Param('callId') callId: string): Promise<void> {
     if (req.user.type === 'login') {
       const restaurantId = req.user.restaurantId;
       return await this.callsService.deleteCall(restaurantId, callId);
