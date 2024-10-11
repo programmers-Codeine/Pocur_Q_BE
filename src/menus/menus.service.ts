@@ -17,7 +17,6 @@ export class MenusService {
     private readonly restaurantRepository: Repository<Menu>,
   ) {}
 
-  //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
   async getAllMenus(restaurantId: string, categoryId?: string): Promise<GetAllMenusResponseDto[]> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
 
@@ -37,7 +36,6 @@ export class MenusService {
       throw new NotFoundException('해당 조건에 맞는 메뉴가 없습니다.');
     }
 
-    // 응답 형식 변경
     const response: GetAllMenusResponseDto[] = menus.map((menu) => ({
       id: menu.id,
       categoryId: menu.category.id,
