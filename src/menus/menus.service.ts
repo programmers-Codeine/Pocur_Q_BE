@@ -91,14 +91,16 @@ export class MenusService {
     return response;
   }
 
-  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
+  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<string> {
     const newMenu = this.menuRepository.create({
       ...createMenuRequestDto,
       restaurant: { id: restaurantId },
       category: createMenuRequestDto.categoryId ? { id: createMenuRequestDto.categoryId } : null,
     });
 
-    return await this.menuRepository.save(newMenu);
+    const savedMenu = await this.menuRepository.save(newMenu);
+
+    return savedMenu.id;
   }
 
   async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menu> {

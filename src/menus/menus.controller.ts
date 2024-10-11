@@ -39,10 +39,11 @@ export class MenusController {
   }
 
   @Post()
-  async createMenu(@Request() req, @Body() createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
+  async createMenu(@Request() req, @Body() createMenuRequestDto: CreateMenuRequestDto): Promise<{ menuId: string }> {
     if (req.user.type === 'login') {
       const restaurantId = req.user.restaurantId;
-      return await this.menusService.createMenu(restaurantId, createMenuRequestDto);
+      const menuId = await this.menusService.createMenu(restaurantId, createMenuRequestDto);
+      return { menuId };
     }
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
