@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Request,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { MenusService } from './menus.service';
 import { Menu } from './entities/menus.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -28,9 +40,11 @@ export class MenusController {
 
   @Post()
   async createMenu(@Request() req, @Body() createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
-    const restaurantId = req.user.restaurantId;
-
-    return await this.menusService.createMenu(restaurantId, createMenuRequestDto);
+    if (req.user.type === 'login') {
+      const restaurantId = req.user.restaurantId;
+      return await this.menusService.createMenu(restaurantId, createMenuRequestDto);
+    }
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
   @Put(':menu_id')
@@ -39,15 +53,20 @@ export class MenusController {
     @Param('menu_id') menuId: string,
     @Body() updateMenuRequestDto: UpdateMenuRequestDto,
   ): Promise<Menu> {
-    const restaurantId = req.user.restaurantId;
-
-    return await this.menusService.updateMenu(restaurantId, menuId, updateMenuRequestDto);
+    if (req.user.type === 'login') {
+      const restaurantId = req.user.restaurantId;
+      return await this.menusService.updateMenu(restaurantId, menuId, updateMenuRequestDto);
+    }
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
   @Delete(':menu_id')
   async deleteCategory(@Request() req, @Param('menu_id') menuId: string): Promise<void> {
-    const restaurantId = req.user.restaurantId;
+    if (req.user.type === 'login') {
+      const restaurantId = req.user.restaurantId;
 
-    return await this.menusService.deleteMenu(restaurantId, menuId);
+      return await this.menusService.deleteMenu(restaurantId, menuId);
+    }
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 }
