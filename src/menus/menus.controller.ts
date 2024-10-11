@@ -25,14 +25,14 @@ export class MenusController {
   constructor(private readonly menusService: MenusService) {}
 
   @Get()
-  async getAllMenus(@Request() req, @Query('category_id') categoryId?: string): Promise<GetAllMenusResponseDto[]> {
+  async getAllMenus(@Request() req, @Query('categoryId') categoryId?: string): Promise<GetAllMenusResponseDto[]> {
     const restaurantId = req.user.restaurantId;
 
     return await this.menusService.getAllMenus(restaurantId, categoryId);
   }
 
-  @Get(':menu_id')
-  async getMenu(@Request() req, @Param('menu_id') menuId: string): Promise<GetMenuResponseDto> {
+  @Get(':menuId')
+  async getMenu(@Request() req, @Param('menuId') menuId: string): Promise<GetMenuResponseDto> {
     const restaurantId = req.user.restaurantId;
 
     return await this.menusService.getMenu(restaurantId, menuId);
@@ -47,10 +47,10 @@ export class MenusController {
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
-  @Put(':menu_id')
+  @Put(':menuId')
   async updateMenu(
     @Request() req,
-    @Param('menu_id') menuId: string,
+    @Param('menuId') menuId: string,
     @Body() updateMenuRequestDto: UpdateMenuRequestDto,
   ): Promise<Menu> {
     if (req.user.type === 'login') {
@@ -60,8 +60,8 @@ export class MenusController {
     throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 
-  @Delete(':menu_id')
-  async deleteCategory(@Request() req, @Param('menu_id') menuId: string): Promise<void> {
+  @Delete(':menuId')
+  async deleteCategory(@Request() req, @Param('menuId') menuId: string): Promise<void> {
     if (req.user.type === 'login') {
       const restaurantId = req.user.restaurantId;
 
