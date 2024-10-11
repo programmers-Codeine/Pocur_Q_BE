@@ -11,11 +11,11 @@ export class OptionsController {
   constructor(private readonly optionsService: OptionsService) {}
 
   @Post(':menu_id')
-  async createOption(
+  async createOptions(
     @Param('menu_id') menuId: string,
-    @Body() createOptionRequestDto: CreateOptionRequestDto,
-  ): Promise<Option> {
-    return await this.optionsService.createOption(menuId, createOptionRequestDto);
+    @Body() createOptionsRequestDto: CreateOptionRequestDto[],
+  ): Promise<Option[]> {
+    return await this.optionsService.createOptions(menuId, createOptionsRequestDto);
   }
 
   @Put(':menu_id/:option_id')

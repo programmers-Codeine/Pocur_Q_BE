@@ -15,20 +15,24 @@ export class OptionsService {
     private readonly menuRepository: Repository<Menu>,
   ) {}
 
-  async createOption(menuId: string, createOptionRequestDto: CreateOptionRequestDto): Promise<Option> {
+  async createOptions(menuId: string, createOptionsRequestDto: CreateOptionRequestDto[]): Promise<Option[]> {
     const menu = await this.menuRepository.findOne({ where: { id: menuId } });
 
     if (!menu) {
       throw new NotFoundException(`${menuId}에 해당하는 메뉴를 찾지 못했습니다.`);
     }
 
-    const newOption = this.optionRepository.create({
-      menu,
-      optionName: createOptionRequestDto.optionName,
-      optionPrice: createOptionRequestDto.optionPrice,
+    await this.optionRepository.delete({ menu: { id: menuId } });
+
+    const newOptions = createOptionsRequestDto.map((optionData) => {
+      return this.optionRepository.create({
+        menu,
+        optionName: optionData.optionName,
+        optionPrice: optionData.optionPrice,
+      });
     });
 
-    return await this.optionRepository.save(newOption);
+    return await this.optionRepository.save(newOptions);
   }
 
   async updateOption(
