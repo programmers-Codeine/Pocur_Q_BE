@@ -8,9 +8,9 @@ export class CustomerJwtController {
   @Post()
   async customerJwt(@Req() request: Request, @Body() body: { restaurantId: string; tableNum: number }): Promise<any> {
     const { restaurantId, tableNum } = body;
-    const { customerToken } = await this.customerJwtService.customerJwt(restaurantId, tableNum);
+    const accessToken = await this.customerJwtService.customerJwt(restaurantId, tableNum);
 
-    request.res.cookie('customerToken', customerToken, {
+    request.res.cookie('accessToken', accessToken, {
       maxAge: 1000 * 60 * 30, // 30분
       httpOnly: true,
       sameSite: 'none',
