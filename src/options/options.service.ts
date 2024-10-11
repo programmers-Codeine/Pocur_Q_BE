@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Option } from './entities/options.entity';
 import { CreateOptionRequestDto } from './dtos/create-options.dro';
 import { Menu } from 'src/menus/entities/menus.entity';
-import { UpdateOptionRequestDto } from './dtos/update-options.dto';
 
 @Injectable()
 export class OptionsService {
@@ -33,38 +32,5 @@ export class OptionsService {
     });
 
     return await this.optionRepository.save(newOptions);
-  }
-
-  async updateOption(
-    menuId: string,
-    optionId: string,
-    updateOptionRequestDto: UpdateOptionRequestDto,
-  ): Promise<Option> {
-    const option = await this.optionRepository.findOne({
-      where: { id: optionId },
-      relations: ['menu'],
-    });
-
-    if (!option || option.menu.id !== menuId) {
-      throw new NotFoundException(`${menuId}에 해당하는 옵션 ${optionId}을 찾지 못했습니다. `);
-    }
-
-    option.optionName = updateOptionRequestDto.optionName;
-    option.optionPrice = updateOptionRequestDto.optionPrice;
-
-    return await this.optionRepository.save(option);
-  }
-
-  async deleteOption(menuId: string, optionId: string): Promise<void> {
-    const option = await this.optionRepository.findOne({
-      where: { id: optionId },
-      relations: ['menu'],
-    });
-
-    if (!option || option.menu.id !== menuId) {
-      throw new NotFoundException(`${menuId}에 해당하는 옵션 ${optionId}을 찾지 못했습니다. `);
-    }
-
-    await this.optionRepository.remove(option);
   }
 }
