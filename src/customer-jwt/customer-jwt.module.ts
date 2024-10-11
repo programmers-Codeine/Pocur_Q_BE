@@ -6,15 +6,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
 import { RestaurantTable } from 'src/restaurantTables/entities/restaurantTables.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Restaurant, RestaurantTable]),
     forwardRef(() => RestaurantsModule),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET, // JWT 비밀키 설정
-      signOptions: { expiresIn: '30m' }, // JWT 만료 시간 설정
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '30m' },
+      }),
     }),
+    ConfigModule.forRoot(),
   ],
   controllers: [CustomerJwtController],
   providers: [CustomerJwtService],
