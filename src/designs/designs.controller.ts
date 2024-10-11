@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { DesignsService } from './designs.service';
 import { Design } from './entities/designs.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -22,8 +22,12 @@ export class DesignsController {
     @Request() req,
     @Body() updateDesignDto: UpdateDesignDto,
   ): Promise<Design> {
-    const restaurantId = req.user.restaurantId;
+    if (req.user.type === 'login') {
+      const restaurantId = req.user.restaurantId;
 
-    return this.designsService.updateDesign(designId, restaurantId, updateDesignDto);
+      return this.designsService.updateDesign(designId, restaurantId, updateDesignDto);
+    }
+
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 }
