@@ -3,7 +3,6 @@ import { Category } from './entities/categories.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCategoryRequestDto } from './dtos/create-categories.dto';
-import { UpdateCategoryRequestDto } from './dtos/update-categories.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -22,31 +21,15 @@ export class CategoriesService {
     return categories;
   }
 
-  async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<Category> {
+  async createCategory(restaurantId: string, createCategoryRequestDto: CreateCategoryRequestDto): Promise<string> {
     const newCategory = this.categoryRepository.create({
       ...createCategoryRequestDto,
       restaurant: { id: restaurantId },
     });
 
-    return await this.categoryRepository.save(newCategory);
-  }
+    const savedCategory = await this.categoryRepository.save(newCategory);
 
-  async updateCategory(
-    restaurantId: string,
-    categoryId: string,
-    updateCategoryRequestDto: UpdateCategoryRequestDto,
-  ): Promise<Category> {
-    const category = await this.categoryRepository.findOne({
-      where: { id: categoryId, restaurant: { id: restaurantId } },
-    });
-
-    if (!category) {
-      throw new NotFoundException(`이 ${categoryId}에 해당하는 카테고리가 없습니다.`);
-    }
-
-    Object.assign(category, updateCategoryRequestDto);
-
-    return await this.categoryRepository.save(category);
+    return savedCategory.id;
   }
 
   async deleteCategory(restaurantId: string, categoryId: string): Promise<void> {

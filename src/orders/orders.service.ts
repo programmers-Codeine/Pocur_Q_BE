@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Order } from './entities/orders.entity';
@@ -108,5 +108,33 @@ export class OrdersService {
     });
 
     return savedOrder;
+  }
+
+  async deleteOrder(orderId: string, restaurantId: string): Promise<void> {
+    const order = await this.ordersRepository.findOne({ where: { id: orderId }, relations: ['restaurant'] });
+
+    if (!order) {
+      throw new NotFoundException(`ID가 ${orderId}인 주문을 찾을 수 없습니다.`);
+    }
+
+    if (order.restaurant.id !== restaurantId) {
+      throw new ForbiddenException('해당 주문에 대한 권한이 없습니다.');
+    }
+
+    await this.ordersRepository.remove(order);
+  }
+
+  async deleteOrdersByTableNum(restaurantId: string, tableNum: number): Promise<void> {
+    const orders = await this.ordersRepository.find({
+      where: { restaurant: { id: restaurantId }, tableNum },
+    });
+
+    if (!orders.length) {
+      throw new NotFoundException(
+        `레스토랑 ID ${restaurantId} 및 테이블 번호 ${tableNum}에 대한 주문이 존재하지 않습니다.`,
+      );
+    }
+
+    await this.ordersRepository.remove(orders);
   }
 }

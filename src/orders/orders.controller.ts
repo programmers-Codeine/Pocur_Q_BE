@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, Request, UseGuards, Delete, UnauthorizedException } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Order } from './entities/orders.entity';
@@ -28,5 +28,27 @@ export class OrdersController {
     const restaurantId = req.user.restaurantId;
 
     return this.ordersService.createOrder(createOrderDto, restaurantId);
+  }
+
+  @Delete(':order_id')
+  async deleteOrder(@Request() req, @Param('order_id') orderId: string): Promise<void> {
+    if (req.user.type === 'login') {
+      const restaurantId = req.user.restaurantId;
+
+      return this.ordersService.deleteOrder(orderId, restaurantId);
+    }
+
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
+  }
+
+  @Delete('table/:table_num')
+  async deleteOrdersByTableNum(@Request() req, @Param('table_num') tableNum: number): Promise<void> {
+    if (req.user.type === 'login') {
+      const restaurantId = req.user.restaurantId;
+
+      return this.ordersService.deleteOrdersByTableNum(restaurantId, tableNum);
+    }
+
+    throw new UnauthorizedException('로그인이 필요한 기능입니다.');
   }
 }
