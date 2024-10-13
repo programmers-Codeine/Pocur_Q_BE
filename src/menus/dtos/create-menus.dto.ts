@@ -1,7 +1,7 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class CreateMenuRequestDto {
-  @IsString()
+  @IsUUID()
   @MaxLength(45)
   @IsOptional()
   categoryId: string;
