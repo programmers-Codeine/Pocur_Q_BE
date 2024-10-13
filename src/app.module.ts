@@ -21,7 +21,6 @@ import { ImgUploadModule } from './img-upload/imgUpload.module';
 import { DesignsModule } from './designs/designs.module';
 import { DesignPresetsModule } from './designPresets/designPresets.module';
 import { CustomerJwtController } from './customer-jwt/customer-jwt.controller';
-import { CustomerJwtService } from './customer-jwt/customer-jwt.service';
 import { CustomerJwtModule } from './customer-jwt/customer-jwt.module';
 import * as dotenv from 'dotenv';
 
