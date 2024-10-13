@@ -17,7 +17,6 @@ export class MenusService {
     private readonly restaurantRepository: Repository<Menu>,
   ) {}
 
-  //Todo: 유저가 매개변수로 받은 restaurantId의 주인이 맞는지 확인하는 로직 필요
   async getAllMenus(restaurantId: string, categoryId?: string): Promise<GetAllMenusResponseDto[]> {
     const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
 
@@ -37,7 +36,6 @@ export class MenusService {
       throw new NotFoundException('해당 조건에 맞는 메뉴가 없습니다.');
     }
 
-    // 응답 형식 변경
     const response: GetAllMenusResponseDto[] = menus.map((menu) => ({
       id: menu.id,
       categoryId: menu.category.id,
@@ -93,14 +91,16 @@ export class MenusService {
     return response;
   }
 
-  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<Menu> {
+  async createMenu(restaurantId: string, createMenuRequestDto: CreateMenuRequestDto): Promise<string> {
     const newMenu = this.menuRepository.create({
       ...createMenuRequestDto,
       restaurant: { id: restaurantId },
       category: createMenuRequestDto.categoryId ? { id: createMenuRequestDto.categoryId } : null,
     });
 
-    return await this.menuRepository.save(newMenu);
+    const savedMenu = await this.menuRepository.save(newMenu);
+
+    return savedMenu.id;
   }
 
   async updateMenu(restaurantId: string, menuId: string, updateMenuRequestDto: UpdateMenuRequestDto): Promise<Menu> {
