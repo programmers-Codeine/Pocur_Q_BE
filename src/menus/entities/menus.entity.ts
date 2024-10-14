@@ -27,7 +27,7 @@ export class Menu {
   @Column({ name: 'menu_detail', type: 'varchar', length: 50, nullable: true })
   menuDetail: string;
 
-  @Column({ name: 'menu_img', type: 'varchar', length: 45, nullable: true })
+  @Column({ name: 'menu_img', type: 'varchar', length: 100, nullable: true })
   menuImg: string;
 
   @Column({ type: 'varchar', length: 45, nullable: true })
