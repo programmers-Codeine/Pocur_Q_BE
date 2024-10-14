@@ -22,7 +22,7 @@ export class UpdateMenuRequestDto {
   menuDetail: string;
 
   @IsString()
-  @MaxLength(45)
+  @MaxLength(100)
   @IsOptional()
   menuImg: string;
 
