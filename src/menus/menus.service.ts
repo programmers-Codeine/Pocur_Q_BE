@@ -30,13 +30,18 @@ export class MenusService {
         ...(categoryId && { category: { id: categoryId } }),
       },
       relations: ['options', 'category'],
+      order: {
+        created_at: 'DESC',
+      },
     });
 
     if (menus.length === 0) {
       throw new NotFoundException('해당 조건에 맞는 메뉴가 없습니다.');
     }
 
-    const response: GetAllMenusResponseDto[] = menus.map((menu) => ({
+    const sortedMenus = menus.sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
+
+    const response: GetAllMenusResponseDto[] = sortedMenus.map((menu) => ({
       id: menu.id,
       categoryId: menu.category.id,
       menuName: menu.menuName,
