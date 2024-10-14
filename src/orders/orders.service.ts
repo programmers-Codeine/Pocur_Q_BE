@@ -49,7 +49,7 @@ export class OrdersService {
     return orders;
   }
 
-  async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<Order[]> {
+  async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<void> {
     const savedOrders: Order[] = [];
 
     for (const createOrderDto of createOrderDtos) {
@@ -93,11 +93,7 @@ export class OrdersService {
       const savedOrder = await this.ordersRepository.save(order);
 
       this.gateway.sendOrderUpdate(restaurantId, savedOrder);
-
-      savedOrders.push(savedOrder);
     }
-
-    return savedOrders;
   }
 
   async deleteOrder(orderId: string, restaurantId: string): Promise<void> {
