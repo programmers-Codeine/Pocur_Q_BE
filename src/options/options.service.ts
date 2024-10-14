@@ -14,7 +14,10 @@ export class OptionsService {
     private readonly menuRepository: Repository<Menu>,
   ) {}
 
-  async createOptions(menuId: string, createOptionsRequestDto: CreateOptionRequestDto[]): Promise<Option[]> {
+  async createOptions(
+    menuId: string,
+    createOptionsRequestDto: CreateOptionRequestDto[],
+  ): Promise<{ id: string; optionName: string; optionPrice: number }[]> {
     const menu = await this.menuRepository.findOne({ where: { id: menuId } });
 
     if (!menu) {
@@ -31,6 +34,12 @@ export class OptionsService {
       });
     });
 
-    return await this.optionRepository.save(newOptions);
+    const savedOptions = await this.optionRepository.save(newOptions);
+
+    return savedOptions.map((option) => ({
+      id: option.id,
+      optionName: option.optionName,
+      optionPrice: option.optionPrice,
+    }));
   }
 }

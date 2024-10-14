@@ -1,6 +1,5 @@
 import { Body, Controller, Param, Post, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { OptionsService } from './options.service';
-import { Option } from './entities/options.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateOptionRequestDto } from './dtos/create-options.dro';
 
@@ -14,7 +13,7 @@ export class OptionsController {
     @Param('menu_id') menuId: string,
     @Body() createOptionsRequestDto: CreateOptionRequestDto[],
     @Request() req,
-  ): Promise<Option[]> {
+  ): Promise<{ id: string; optionName: string; optionPrice: number }[]> {
     if (req.user.type === 'login') {
       return await this.optionsService.createOptions(menuId, createOptionsRequestDto);
     }
