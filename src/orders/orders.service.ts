@@ -35,12 +35,6 @@ export class OrdersService {
       relations: ['restaurant', 'menu', 'options'],
     });
 
-    if (!orders.length) {
-      throw new NotFoundException(
-        `레스토랑 ID ${restaurantId} 및 테이블 번호 ${tableNum}에 대한 주문이 존재하지 않습니다.`,
-      );
-    }
-
     return orders;
   }
 
@@ -51,10 +45,6 @@ export class OrdersService {
       },
       relations: ['restaurant', 'menu', 'options'],
     });
-
-    if (!orders.length) {
-      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 대한 주문이 존재하지 않습니다.`);
-    }
 
     return orders;
   }
