@@ -1,7 +1,7 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class UpdateMenuRequestDto {
-  @IsString()
+  @IsUUID()
   @MaxLength(45)
   @IsOptional()
   categoryId: string;
@@ -22,7 +22,7 @@ export class UpdateMenuRequestDto {
   menuDetail: string;
 
   @IsString()
-  @MaxLength(45)
+  @MaxLength(100)
   @IsOptional()
   menuImg: string;
 

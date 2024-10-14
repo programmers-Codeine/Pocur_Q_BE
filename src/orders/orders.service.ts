@@ -5,7 +5,7 @@ import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { OrdersGateway } from './orders.gateway';
+import { Gateway } from '../socket/socket.gateway';
 import { Option } from 'src/options/entities/options.entity';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class OrdersService {
     @InjectRepository(Option)
     private optionsRepository: Repository<Option>,
 
-    private ordersGateway: OrdersGateway,
+    private gateway: Gateway,
   ) {}
 
   async getOrdersByTableNum(restaurantId: string, tableNum: number): Promise<Order[]> {
@@ -35,12 +35,6 @@ export class OrdersService {
       relations: ['restaurant', 'menu', 'options'],
     });
 
-    if (!orders.length) {
-      throw new NotFoundException(
-        `레스토랑 ID ${restaurantId} 및 테이블 번호 ${tableNum}에 대한 주문이 존재하지 않습니다.`,
-      );
-    }
-
     return orders;
   }
 
@@ -51,10 +45,6 @@ export class OrdersService {
       },
       relations: ['restaurant', 'menu', 'options'],
     });
-
-    if (!orders.length) {
-      throw new NotFoundException(`레스토랑 ID ${restaurantId}에 대한 주문이 존재하지 않습니다.`);
-    }
 
     return orders;
   }
@@ -99,13 +89,7 @@ export class OrdersService {
 
     const savedOrder = await this.ordersRepository.save(order);
 
-    this.ordersGateway.sendOrderUpdate({
-      id: savedOrder.id,
-      tableNum: savedOrder.tableNum,
-      menuName: menu.menuName,
-      count,
-      totalPrice,
-    });
+    this.gateway.sendOrderUpdate(restaurantId, savedOrder);
 
     return savedOrder;
   }
