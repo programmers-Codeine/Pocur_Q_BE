@@ -18,7 +18,7 @@ export class CategoriesService {
       throw new NotFoundException('레스토랑의 카테고리를 찾지 못했습니다.');
     }
 
-    const sortedCategories = categories.sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
+    const sortedCategories = categories.toSorted((a, b) => b.created_at.getTime() - a.created_at.getTime());
 
     return sortedCategories;
   }

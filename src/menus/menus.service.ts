@@ -39,7 +39,7 @@ export class MenusService {
       throw new NotFoundException('해당 조건에 맞는 메뉴가 없습니다.');
     }
 
-    const sortedMenus = menus.sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
+    const sortedMenus = menus.toSorted((a, b) => b.created_at.getTime() - a.created_at.getTime());
 
     const response: GetAllMenusResponseDto[] = sortedMenus.map((menu) => ({
       id: menu.id,
