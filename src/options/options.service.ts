@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Option } from './entities/options.entity';
 import { CreateOptionRequestDto } from './dtos/create-options.dro';
 import { Menu } from 'src/menus/entities/menus.entity';
+import { OptionResponseDto } from './dtos/option-response.dto';
 
 @Injectable()
 export class OptionsService {
@@ -14,7 +15,7 @@ export class OptionsService {
     private readonly menuRepository: Repository<Menu>,
   ) {}
 
-  async createOptions(menuId: string, createOptionsRequestDto: CreateOptionRequestDto[]): Promise<Option[]> {
+  async createOptions(menuId: string, createOptionsRequestDto: CreateOptionRequestDto[]): Promise<OptionResponseDto[]> {
     const menu = await this.menuRepository.findOne({ where: { id: menuId } });
 
     if (!menu) {
@@ -31,6 +32,12 @@ export class OptionsService {
       });
     });
 
-    return await this.optionRepository.save(newOptions);
+    const savedOptions = await this.optionRepository.save(newOptions);
+
+    return savedOptions.map((option) => ({
+      id: option.id,
+      optionName: option.optionName,
+      optionPrice: option.optionPrice,
+    }));
   }
 }
