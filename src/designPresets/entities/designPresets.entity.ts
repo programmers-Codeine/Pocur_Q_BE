@@ -10,6 +10,9 @@ export class DesignPreset {
   @Column({ type: 'varchar', length: 45 })
   name: string;
 
+  @Column({ type: 'varchar', length: 100, name: 'design_image', nullable: true })
+  designImage: string;
+
   @Column({ type: 'varchar', length: 45, nullable: true })
   background: string;
 
