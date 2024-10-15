@@ -31,7 +31,7 @@ export class CreateMenuRequestDto {
   origin: string;
 
   @IsBoolean()
-  isActivate: boolean = true;
+  isActive: boolean = true;
 
   @IsBoolean()
   soldOut: boolean = false;

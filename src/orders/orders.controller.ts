@@ -24,10 +24,10 @@ export class OrdersController {
   }
 
   @Post()
-  async createOrder(@Request() req, @Body() createOrderDto: CreateOrderDto): Promise<Order> {
+  async createOrders(@Request() req, @Body() createOrderDtos: CreateOrderDto[]): Promise<void> {
     const restaurantId = req.user.restaurantId;
 
-    return this.ordersService.createOrder(createOrderDto, restaurantId);
+    await this.ordersService.createOrders(createOrderDtos, restaurantId);
   }
 
   @Delete(':order_id')

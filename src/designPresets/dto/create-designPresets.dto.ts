@@ -7,6 +7,10 @@ export class CreateDesignPresetDto {
 
   @IsOptional()
   @IsString()
+  designImage?: string;
+
+  @IsOptional()
+  @IsString()
   background?: string;
 
   @IsOptional()

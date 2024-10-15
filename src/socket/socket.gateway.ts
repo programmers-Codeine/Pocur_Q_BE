@@ -55,6 +55,7 @@ export class Gateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDis
 
   afterInit(server: Server) {
     console.log('WebSocket 서버 초기화 완료');
+    console.log(`서버 인스턴스: ${server}`);
   }
 }
 

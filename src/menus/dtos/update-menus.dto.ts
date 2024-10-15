@@ -32,7 +32,7 @@ export class UpdateMenuRequestDto {
   origin: string;
 
   @IsBoolean()
-  isActivate: boolean = true;
+  isActive: boolean = true;
 
   @IsBoolean()
   soldOut: boolean = false;
