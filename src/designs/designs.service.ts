@@ -28,14 +28,14 @@ export class DesignsService {
     return design;
   }
 
-  async updateDesign(designId: string, restaurantId: string, updateDesignDto: UpdateDesignDto): Promise<Design> {
+  async updateDesign(restaurantId: string, updateDesignDto: UpdateDesignDto): Promise<Design> {
     const design = await this.designsRepository.findOne({
-      where: { id: designId },
+      where: { restaurant: { id: restaurantId } },
       relations: ['restaurant'],
     });
 
     if (!design) {
-      throw new NotFoundException(`ID가 ${designId}인 디자인을 찾을 수 없습니다.`);
+      throw new NotFoundException(`레스토랑 ID가 ${restaurantId}인 디자인을 찾을 수 없습니다.`);
     }
 
     if (design.restaurant.id !== restaurantId) {
