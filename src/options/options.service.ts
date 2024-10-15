@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Option } from './entities/options.entity';
 import { CreateOptionRequestDto } from './dtos/create-options.dro';
 import { Menu } from 'src/menus/entities/menus.entity';
+import { OptionResponseDto } from './dtos/option-response.dto';
 
 @Injectable()
 export class OptionsService {
@@ -14,10 +15,7 @@ export class OptionsService {
     private readonly menuRepository: Repository<Menu>,
   ) {}
 
-  async createOptions(
-    menuId: string,
-    createOptionsRequestDto: CreateOptionRequestDto[],
-  ): Promise<{ id: string; optionName: string; optionPrice: number }[]> {
+  async createOptions(menuId: string, createOptionsRequestDto: CreateOptionRequestDto[]): Promise<OptionResponseDto[]> {
     const menu = await this.menuRepository.findOne({ where: { id: menuId } });
 
     if (!menu) {
