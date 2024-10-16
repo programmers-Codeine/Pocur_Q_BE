@@ -32,10 +32,13 @@ export class OrdersService {
         restaurant: { id: restaurantId },
         tableNum,
       },
-      relations: ['restaurant', 'menu', 'options'],
+      relations: ['restaurant', 'menu', 'menu.category', 'options'],
     });
 
-    return orders;
+    return orders.map((order) => ({
+      ...order,
+      categoryName: order.menu?.category?.categoryName,
+    }));
   }
 
   async getOrders(restaurantId: string): Promise<Order[]> {
@@ -43,10 +46,13 @@ export class OrdersService {
       where: {
         restaurant: { id: restaurantId },
       },
-      relations: ['restaurant', 'menu', 'options'],
+      relations: ['restaurant', 'menu', 'menu.category', 'options'],
     });
 
-    return orders;
+    return orders.map((order) => ({
+      ...order,
+      categoryName: order.menu?.category?.categoryName,
+    }));
   }
 
   async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<void> {
