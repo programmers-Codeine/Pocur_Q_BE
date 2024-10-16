@@ -9,6 +9,8 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { CreateOrderDto } from 'src/orders/dto/create-orders.dto';
+import { OrdersService } from 'src/orders/orders.service';
 
 @WebSocketGateway({
   cors: {
@@ -20,6 +22,8 @@ import { Server, Socket } from 'socket.io';
 export class Gateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
+
+  constructor(private readonly ordersService: OrdersService) {}
 
   // 클라이언트가 연결될 때 호출
   handleConnection(client: Socket) {
@@ -39,9 +43,23 @@ export class Gateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDis
     }
   }
 
-  // createOrder에서 호출
-  sendOrderUpdate(restaurantId: string, orderData: any) {
-    this.server.to(restaurantId).emit('orderUpdate', orderData); // 주문 정보를 전송
+  @SubscribeMessage('placeOrder')
+  async handlePlaceOrder(
+    @MessageBody() createOrderDtos: CreateOrderDto[],
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    const restaurantId = client.handshake.query.restaurantId as string;
+
+    try {
+      // 주문을 생성
+      await this.ordersService.createOrders(createOrderDtos, restaurantId);
+
+      // 주문 생성 후 클라이언트에게 알림 전송
+      this.server.to(restaurantId).emit('orderUpdate', { message: '주문이 성공적으로 생성되었습니다.' });
+    } catch (error) {
+      // 에러 발생 시 클라이언트에게 에러 알림 전송
+      client.emit('orderError', { message: error.message });
+    }
   }
 
   // 프론트엔드에서 placeCallRequest 이벤트로 데이터를 전달받는 메소드

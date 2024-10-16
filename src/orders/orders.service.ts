@@ -5,7 +5,6 @@ import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { Gateway } from '../socket/socket.gateway';
 import { Option } from 'src/options/entities/options.entity';
 
 @Injectable()
@@ -22,8 +21,6 @@ export class OrdersService {
 
     @InjectRepository(Option)
     private optionsRepository: Repository<Option>,
-
-    private gateway: Gateway,
   ) {}
 
   async getOrdersByTableNum(restaurantId: string, tableNum: number): Promise<Order[]> {
@@ -94,9 +91,7 @@ export class OrdersService {
         options,
       });
 
-      const savedOrder = await this.ordersRepository.save(order);
-
-      this.gateway.sendOrderUpdate(restaurantId, savedOrder);
+      await this.ordersRepository.save(order);
     }
   }
 
