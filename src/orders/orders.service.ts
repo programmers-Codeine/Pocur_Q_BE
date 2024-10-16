@@ -5,7 +5,6 @@ import { Order } from './entities/orders.entity';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { Menu } from 'src/menus/entities/menus.entity';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
-import { Gateway } from '../socket/socket.gateway';
 import { Option } from 'src/options/entities/options.entity';
 
 @Injectable()
@@ -22,8 +21,6 @@ export class OrdersService {
 
     @InjectRepository(Option)
     private optionsRepository: Repository<Option>,
-
-    private gateway: Gateway,
   ) {}
 
   async getOrdersByTableNum(restaurantId: string, tableNum: number): Promise<Order[]> {
@@ -32,10 +29,13 @@ export class OrdersService {
         restaurant: { id: restaurantId },
         tableNum,
       },
-      relations: ['restaurant', 'menu', 'options'],
+      relations: ['restaurant', 'menu', 'menu.category', 'options'],
     });
 
-    return orders;
+    return orders.map((order) => ({
+      ...order,
+      categoryName: order.menu?.category?.categoryName,
+    }));
   }
 
   async getOrders(restaurantId: string): Promise<Order[]> {
@@ -43,15 +43,16 @@ export class OrdersService {
       where: {
         restaurant: { id: restaurantId },
       },
-      relations: ['restaurant', 'menu', 'options'],
+      relations: ['restaurant', 'menu', 'menu.category', 'options'],
     });
 
-    return orders;
+    return orders.map((order) => ({
+      ...order,
+      categoryName: order.menu?.category?.categoryName,
+    }));
   }
 
   async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<void> {
-    const savedOrders: Order[] = [];
-
     for (const createOrderDto of createOrderDtos) {
       const { menuId, count, tableNum, optionIds } = createOrderDto;
 
@@ -90,9 +91,7 @@ export class OrdersService {
         options,
       });
 
-      const savedOrder = await this.ordersRepository.save(order);
-
-      this.gateway.sendOrderUpdate(restaurantId, savedOrder);
+      await this.ordersRepository.save(order);
     }
   }
 

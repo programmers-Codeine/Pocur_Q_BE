@@ -23,12 +23,13 @@ export class OrdersController {
     return this.ordersService.getOrders(restaurantId);
   }
 
-  @Post()
-  async createOrders(@Request() req, @Body() createOrderDtos: CreateOrderDto[]): Promise<void> {
-    const restaurantId = req.user.restaurantId;
+  //추후 사용할 수 있음
+  // @Post()
+  // async createOrders(@Request() req, @Body() createOrderDtos: CreateOrderDto[]): Promise<void> {
+  //   const restaurantId = req.user.restaurantId;
 
-    await this.ordersService.createOrders(createOrderDtos, restaurantId);
-  }
+  //   await this.ordersService.createOrders(createOrderDtos, restaurantId);
+  // }
 
   @Delete(':order_id')
   async deleteOrder(@Request() req, @Param('order_id') orderId: string): Promise<void> {
