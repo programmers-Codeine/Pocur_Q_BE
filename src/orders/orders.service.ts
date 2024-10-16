@@ -56,8 +56,6 @@ export class OrdersService {
   }
 
   async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<void> {
-    const savedOrders: Order[] = [];
-
     for (const createOrderDto of createOrderDtos) {
       const { menuId, count, tableNum, optionIds } = createOrderDto;
 
