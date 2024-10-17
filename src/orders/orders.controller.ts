@@ -1,6 +1,5 @@
-import { Controller, Post, Body, Param, Get, Request, UseGuards, Delete, UnauthorizedException } from '@nestjs/common';
+import { Controller, Param, Get, Request, UseGuards, Delete, UnauthorizedException } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-orders.dto';
 import { Order } from './entities/orders.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
