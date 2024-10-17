@@ -52,10 +52,10 @@ export class Gateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDis
 
     try {
       // 주문을 생성
-      await this.ordersService.createOrders(createOrderDtos, restaurantId);
+      const orders = await this.ordersService.createOrders(createOrderDtos, restaurantId);
 
-      // 주문 생성 후 클라이언트에게 알림 전송
-      this.server.to(restaurantId).emit('orderUpdate', { message: '주문이 성공적으로 생성되었습니다.' });
+      // 주문 생성 후 클라이언트에게 생성된 주문을 전송
+      this.server.to(restaurantId).emit('orderUpdate', { orders });
     } catch (error) {
       // 에러 발생 시 클라이언트에게 에러 알림 전송
       client.emit('orderError', { message: error.message });
