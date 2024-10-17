@@ -1,4 +1,10 @@
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Users } from './entities/users.entity';
@@ -7,6 +13,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Restaurant } from 'src/restaurants/entities/restaurants.entity';
+
+interface jwtReissuePayload {
+  restaurantId: string;
+  userId: string;
+  type: string;
+}
 
 @Injectable()
 export class UsersService {
@@ -65,5 +77,21 @@ export class UsersService {
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken, isFirstLogin };
+  }
+
+  async jwtReissue(restaurantId: string, userId: string): Promise<any> {
+    const restaurant = await this.restaurantRepository.findOne({ where: { id: restaurantId } });
+    if (!restaurant) {
+      throw new NotFoundException(`${restaurantId}에 해당하는 식당을 찾지 못했습니다.`);
+    }
+
+    const payload: jwtReissuePayload = {
+      restaurantId: restaurantId,
+      userId: userId,
+      type: 'login',
+    };
+
+    const jwtReissue = this.jwtService.sign(payload);
+    return jwtReissue;
   }
 }
