@@ -52,7 +52,9 @@ export class OrdersService {
     }));
   }
 
-  async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<void> {
+  async createOrders(createOrderDtos: CreateOrderDto[], restaurantId: string): Promise<Order[]> {
+    const createdOrders = [];
+
     for (const createOrderDto of createOrderDtos) {
       const { menuId, count, tableNum, optionIds } = createOrderDto;
 
@@ -91,8 +93,11 @@ export class OrdersService {
         options,
       });
 
-      await this.ordersRepository.save(order);
+      const savedOrder = await this.ordersRepository.save(order);
+      createdOrders.push(savedOrder);
     }
+
+    return createdOrders;
   }
 
   async deleteOrder(orderId: string, restaurantId: string): Promise<void> {
