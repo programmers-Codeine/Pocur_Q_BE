@@ -68,6 +68,22 @@ export class RestaurantsService {
     const newDesignPreset = this.designPresetRepository.create({
       restaurant: savedRestaurant,
       name: '기본 디자인',
+      background: '#ffffff',
+      bigText: '#000000',
+      box: '#ffffff',
+      boxBorder: '#d2d1d1',
+      buttonActiveBackground: '#1b1ecf',
+      buttonActiveBorder: '#1b1ecf',
+      buttonActiveText: '#ffffff',
+      buttonBackground: '#ffffff',
+      buttonBorder: '#000000bb',
+      buttonText: '#000000bb',
+      designImage: '',
+      icon: '#505F79',
+      labelHot: '#f10000',
+      labelNew: '#f1ff0c',
+      labelSoldOut: '#000527',
+      smallText: '#000000a0',
     });
     const savedDesignPreset = await this.designPresetRepository.save(newDesignPreset);
 
