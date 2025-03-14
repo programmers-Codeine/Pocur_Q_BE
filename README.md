@@ -2,7 +2,7 @@
 # Pocur Q
 
 <div>
-<img width="600" alt="main" src="https://github.com/user-attachments/assets/c16f90e5-82ca-426d-853f-b55f63c1d7c8"/> <img height="100" alt="main" src="https://github.com/user-attachments/assets/8baf901a-4b7b-4f27-8ca9-225f91c04772"/>
+<img width="600" alt="main" src="https://github.com/user-attachments/assets/c16f90e5-82ca-426d-853f-b55f63c1d7c8"/> <img height="400" alt="main" src="https://github.com/user-attachments/assets/8baf901a-4b7b-4f27-8ca9-225f91c04772"/>
 </div>
 
 ### 프로젝트 소개
@@ -12,7 +12,7 @@ Pocur Q는 QR을 활용한 **모바일 키오스크**와 **가게 포스기 기�
 프로젝트 기간	: 2024.9 - 2024.10 2개월 <br>
 Front : 김태영, 박병권 <br>
 Back : 최효은, 이민형 <br>
-배포 링크 : [https://pocurq.shop/]https://pocurq.shop/
+배포 링크 : https://pocurq.shop/
 
 ### 개발 환경
 
