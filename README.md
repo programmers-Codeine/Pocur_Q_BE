@@ -24,6 +24,7 @@ Back : 최효은, 이민형
 
 <details>
   <summary>Back</summary>
+  
   ```
   📦src
  ┣ 📂auth
@@ -139,6 +140,7 @@ Back : 최효은, 이민형
  ┣ 📜app.module.ts
  ┗ 📜main.ts
   ```
+
 </details>
 
 <details>
