@@ -2,7 +2,7 @@
 # Pocur Q
 
 <div>
-<img width="600" alt="main" src="https://github.com/user-attachments/assets/c16f90e5-82ca-426d-853f-b55f63c1d7c8"/> <img width="200" alt="main" src="https://github.com/user-attachments/assets/8baf901a-4b7b-4f27-8ca9-225f91c04772"/>
+<img width="600" alt="main" src="https://github.com/user-attachments/assets/c16f90e5-82ca-426d-853f-b55f63c1d7c8"/> <img height="100" alt="main" src="https://github.com/user-attachments/assets/8baf901a-4b7b-4f27-8ca9-225f91c04772"/>
 </div>
 
 ### 프로젝트 소개
